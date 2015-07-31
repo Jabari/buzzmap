@@ -1,0 +1,247 @@
+$font-stack:    Helvetica, sans-serif;
+$primary-color: #333;
+
+body {
+  font: 100% $font-stack;
+  color: $primary-color;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    text-rendering: optimizeLegibility;
+}
+html, body, #map {
+    height: 100%;
+    width: 100%;
+    //font-size: 62.5%;
+    margin:0;
+    padding:0;
+}
+#splash {
+	background: #3d0f7a;
+    opacity: 0.3;
+    height: 100%;
+    width: 100%;
+    z-index: 100;
+}
+#action-bar {
+	//background: #30505e;
+	color: #fff;
+	float: left;
+	color: #fff;
+	padding: 0;
+	box-shadow: 1px 0 3px 0px #333;
+}
+.gm-style-iw > div {
+	overflow: hidden !important;
+}
+.ion-android-locate {
+	border-radius: 4px;
+	color: #4d90fe;
+	background: #fff;
+	position: absolute;
+	top: 54px;
+	left: 14px;
+}
+#moving-map {
+	z-index: 90; 
+	width: 560px; 
+	height: 400px; 
+	background-image: url(bg-clouds.png);
+	background-position: 0px 0px;
+	background-repeat: repeat-x;
+	animation: animatedBackground 40s linear infinite;
+}
+@keyframes animatedBackground {
+		 to { background-position-x:100%; } 
+}
+#nav-btn {
+	text-align: center;
+	width: 44px;
+	height: 44px;
+	cursor:pointer;
+	padding-top: 12px;
+	font-size: 21px;
+	
+	&:active {
+		background: #2c3e50;
+	}
+}
+#title_card {
+	text-align: center;
+	position: relative;
+	height: 44px;
+	font-weight: 700;
+	border-right: solid #fff 2px;
+	padding-right: 16px;
+	//left: 45px;
+	padding-top: 12.5px;
+	box-shadow: 2px 0 3px -1px #222;
+}
+.title {
+	//text-shadow:-1px -1px 1px #222, 1px 1px 1px #666;
+	font-weight: 700;	
+	font-size: 48px;
+	position: relative;
+	color: #fff;
+	background: #30505e;
+	border: 0;
+}
+#list-icon {
+	text-align: center;
+	width: 44px;
+	height: 44px;
+	position: absolute;
+	right: 0;
+	padding-top: 13px;
+	font-size: 19px;
+	cursor: pointer;
+}
+.bigl {
+	font: Times;
+	font-weight: 700;
+}
+.textInput {
+	background: #fff;
+	border: #ccc 2px solid;
+	border-radius: 3px;
+	}
+.submitText {
+	position: relative;
+	//top: 3px;
+	left: 5px;
+	background: #fff;
+	border: #ccc 2px solid;
+	border-radius: 3px;
+	vertical-align: top;
+}
+/* MIXINS */
+@mixin slide-transition() {
+  -webkit-transition: -webkit-transform 400ms ease;
+  -moz-transition: -moz-transform 400ms ease;
+  -o-transition: -o-transform 400ms ease;
+  transition: transform 400ms ease;
+}
+
+/* Normally, would use Compass */
+@mixin translate3d($x,$y,$z) {
+  -webkit-transform: translate3d($x,$y,$z);
+  -moz-transform: translate3d($x,$y,$z);
+  -ms-transform: translate3d($x,$y,$z);
+  -o-transform: translate3d($x,$y,$z);
+  transform: translate3d($x,$y,$z);
+}
+
+@mixin backface-visibility($val) {
+  -webkit-backface-visibility: $val;
+  -moz-backface-visibility: $val;
+  -ms-backface-visibility: $val;
+  -o-backface-visibility: $val;
+  backface-visibility: $val;
+}
+
+/* TYPE */
+body {
+    font: 14px/1.2 Helvetica, Arial, sans-serif;
+}
+
+/* BASE STYLES */
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.outer-wrap, .inner-wrap, .nav-drawer {
+  height: 100%;
+}
+
+
+.outer-wrap {
+  position: relative; /* to contain its children and their widths */
+  overflow-x: hidden;
+  background-color: #fefefe;
+}
+
+
+
+/* NAV DRAWER */
+.nav-drawer, .inner-wrap {
+    @include backface-visibility(hidden);
+    @include slide-transition();
+    -webkit-overflow-scrolling: touch;
+    overflow-y: hidden;
+}
+
+.nav-drawer {
+    position: absolute;
+    top:44px;
+    left: 0;
+    @include translate3d(-100%,0,0);
+    background: #333;
+    width: 152px;
+    max-height: 100%;
+    z-index: 300;
+    
+    .nav-open & {
+        @include translate3d(0,0,0);
+    }
+}
+
+.inner-wrap {
+    width: 100%;
+    position: relative;
+    top: 0;
+    left: 0;
+    max-height: 100%;
+    padding-top: 50px;
+    @include translate3d(0,0,0);
+    
+    .nav-open & {
+        @include translate3d(-83%,0,0);
+    }
+}
+
+/* CONTENT */
+.content {
+  padding: 10px;
+  position: relative;
+  height: 100%;
+  min-height: 100%;
+  max-height: 100%;
+}
+
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    padding: 8px;
+    
+    a:active {
+      color: #18bc9c;
+    }
+  }
+}
+/** new drawer style ***/
+	.platform-android .menu .scroll-content {
+	top: 42px;
+}
+.platform-android .menu-content {
+	box-shadow: none;
+}
+.platform-android.menu-open ion-pane.pane{
+	background-color: black;
+}
+.platform-android.menu-open ion-view.pane{
+	opacity:0.5;
+}
+.physical_1px{
+  background-image: linear-gradient(0deg, #DFDFDF, #DFDFDF 50%, transparent 50%);
+  background-size: 100% 1px;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  height: 1px;
+}

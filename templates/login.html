@@ -1,0 +1,24 @@
+<div class="modal" on-swipe-down="closeLogin()">
+  <ion-header-bar class="bar-light">
+    <h1 class="title"></h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeLogin()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <form id="login" name="login" on-swipe-down="closeLogin()" role="form">
+      <div class="list">
+        <label class="item item-input">
+          <input type="text" ng-model="loginData.username" placeholder="username" required>
+        </label>
+        <label class="item item-input">
+          <input type="password" ng-model="loginData.password" placeholder="password" required>
+        </label>
+        <label class="item">
+          <button class="button button-block button-positive" ng-click="doLogin()" ng-disabled="login.$invalid" type="submit">Log in</button>
+        </label>
+      </div>
+    </form>
+  </ion-content>
+</div>
+

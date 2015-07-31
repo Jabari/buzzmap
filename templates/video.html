@@ -1,0 +1,51 @@
+<!doctype html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Videogular - Simplest example</title>
+	<meta name="viewport" content="width=device-width">
+	<link rel="stylesheet" href="styles.css">
+</head>
+<div ng-app="AppCtrl">
+<div ng-controller="VidCtrl as controller">
+	<div class="videogular-container">
+		<videogular vg-player-ready="controller.onPlayerReady($API)" vg-complete="controller.onCompleteVideo()" vg-theme="controller.config.theme.url">
+			<vg-media vg-src="controller.config.sources"
+					  vg-tracks="controller.config.tracks">
+			</vg-media>
+
+			<vg-controls>
+				<vg-scrub-bar>
+					<vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+				</vg-scrub-bar>
+				<vg-time-display>{{ currentTime | date:'mm:ss' }}</vg-time-display>
+				<vg-volume>
+					<vg-mute-button></vg-mute-button>
+				</vg-volume>
+				<vg-fullscreen-button></vg-fullscreen-button>
+			</vg-controls>
+
+			<vg-overlay-play></vg-overlay-play>
+			<vg-buffering></vg-buffering>
+			<vg-poster vg-url='controller.config.plugins.poster'></vg-poster>
+		</videogular>
+	</div>
+	<div class="playlist">
+		<ul>
+			<li><a ng-click="controller.setVideo(0)">Bus Driver</a></li>
+			<li><a ng-click="controller.setVideo(1)">Silent Disco</a></li>
+			<li><a ng-click="controller.setVideo(2)">Shark</a></li>
+		</ul>
+	</div>
+</div>
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-sanitize.min.js"></script>
+<script src="http://static.videogular.com/scripts/videogular/latest/videogular.js"></script>
+<script src="http://static.videogular.com/scripts/controls/latest/vg-controls.js"></script>
+<script src="http://static.videogular.com/scripts/overlay-play/latest/vg-overlay-play.js"></script>
+<script src="http://static.videogular.com/scripts/poster/latest/vg-poster.js"></script>
+<script src="http://static.videogular.com/scripts/buffering/latest/vg-buffering.js"></script>
+<script src="js/controllers/video.js"></script>

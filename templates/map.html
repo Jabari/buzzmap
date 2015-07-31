@@ -1,0 +1,189 @@
+<ion-view title='<!--<img src="../img/bm-pin-v1-38x42.png" />-->'>
+  <!--
+  <ion-refresher on-refresh="doRefresh()" refreshing-text="loading...">
+  </ion-refresher>
+  -->
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left" class="button button-icon icon ion-navicon-round"></button>
+  </ion-nav-buttons>
+  <ion-nav-buttons side="right">
+    <a class="button button-icon icon ion-ios-paper-outline ion-ios7-paper-outline" ng-click="feed()"></a>
+  </ion-nav-buttons>
+  <ion-content id="map" hide-nav-bar="true">
+    <div class="ng-scope">
+      <map disable-default-u-i="true" data-tap-disabled="true" class="disable-user-behavior" ng-cloak>      
+        <home class="ion-android-locate nav-tools" position="TOP_LEFT" index="1" ng-click="home()">
+        </home>
+
+        <search href="#search_field" class="ion-ios7-search-strong nav-tools" position="TOP_RIGHT" 
+        index="2" id="search" ng-click="startSearch()">
+          <input id="search_map" ng-model="searchMap" ng-class="{'widen': toggleSearch}" 
+          ng-click="$event.stopPropagation();"
+          ng-keyup="$event.keyCode == 13 && googleMap()" ng-autocomplete placeholder="Search by #tag or locations"/>
+        </search>
+
+        <cam class="button-icon icon ion-aperture nav-tools" index="3" id="eye" position="BOTTOM_LEFT" ng-click="postVid()" ng-controller="CamCtrl"> 
+        </cam>
+
+        <clock class="button-icon icon ion-android-clock nav-tools" index="4" src="../img/timeline.png" id="clock" position="BOTTOM_RIGHT" ng-click="Timeline()" ng-hide="true"> 
+        </clock>
+
+      </map>
+      <style>
+.playlist ul {
+  list-style-type: none;
+}
+
+.playlist ul a {
+  cursor: pointer;
+  color: #428bca;
+  text-decoration: none;
+}
+
+.playlist ul a:visited {
+  color: #428bca;
+}
+
+.playlist ul a:hover {
+  color: #428bca;
+  text-decoration: underline;
+}
+
+.videogular-container {
+  width: 100%;
+  height: 320px;
+  margin: auto;
+  overflow: hidden;
+}
+
+.videogular-container .skipButton {
+  position: absolute;
+  padding: 10px;
+  top: 10px;
+  right: 10px;
+  z-index: 99999;
+  color: white;
+  cursor: pointer;
+  background-color: #666666;
+  border: 2px #FFFFFF solid;
+  display: none;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  border-radius: 10px;
+}
+
+@media (min-width: 1200px) {
+  .videogular-container {
+    width: 1170px;
+    height: 658.125px;
+    background: black;
+  }
+
+  .videogular-container.audio {
+    width: 1170px;
+    height: 50px;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .videogular-container {
+    width: 940px;
+    height: 528.75px;
+  }
+
+  .videogular-container.audio {
+    width: 940px;
+    height: 50px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .videogular-container {
+    width: 728px;
+    height: 409.5px;
+  }
+
+  .videogular-container.audio {
+    width: 728px;
+    height: 50px;
+  }
+}
+.item-divider {
+  background: #000;
+  color: #fff;
+  font-weight: 600;
+  border-bottom: none;
+}
+</style>
+<!--
+      <ion-list id="feed" ng-class="{'show_feed': showFeed}">
+        <ion-scroll direction="y" style="height: 50vh">
+            <ion-item ng-click="panToPin(latlng)" ng-repeat="event in mapData.videos" 
+            class="feed-items">
+              {{mapData.videos[$index].title}}
+              <span class="item-note">
+                {{mapData.videos[$index].t_posted | timeAgo}}
+              </span>
+            </ion-item>
+        </ion-scroll>
+      </ion-list>
+-->
+      <script id="modal-video.html" type="text/ng-template">
+        <div class="modal">
+          <i class="icon ion-ios-close close-modal" ng-click="closeModal(1)">X</i>
+          <div class="item item-divider">
+          {{title}}
+          </div>
+          <div id="vidctrl">
+            <div class="videogular-container" id="vidcontainer">
+              <div id="votes">
+                <i class="ion-chevron-up" ng-click="upvote()"></i>
+                <span id="ups">{{ups}}</span>
+                <i class="ion-chevron-down" ng-click="downvote()"></i>
+              </div>
+              <video controls autoplay preload="auto" id="video_player" on-swipe-down="closeModal(1)">
+                <source ng-src="{{url}}" type="video/mp4">
+              </video>
+              <!--
+              -->
+              <div id="communityVid">
+                <div id="metadata">
+                    <img id="userPic" src="http://storage.googleapis.com/bm-assets/rastamike.jpg"/>
+                    <div id="views" class="ion-eye">
+                      {{views}}
+                    </div>
+                    <div id="userName">
+                      by {{username}}
+                    </div>
+                    <div id="description" ng-bind-html="desc">
+                    </div>
+                    <div id="share">
+                      <button class="icon-Speach-Bubble"></button>
+                      <button class="icon-Facebook-2"></button>
+                      <button class="icon-Twitter"></button>
+                      <button class="icon-Google-Plus"></button>
+                      <button class="icon-Reddit"></button>
+                    </div>
+                </div>
+                <form ng-submit="addComment()">
+                  <input id="commentbox" type="text" placeholder="What do you think?" class="ion-android-chat" ng-model="comment"/>
+                </form>
+                <button class="collapsed-comments" ng-href="#comments">view {{comments.length}} comments<i class="ion-chevron-down"></i></button>
+                <ion-list id="comments" class="list"><!--expandable-->
+                    <p ng-repeat="comment in comments" class="comment">
+                      <span class="user">{{comment.user}}</span>: {{comment.content}} <sub>{{comment.time | timeAgo}}</sub>
+                    </p>
+                    <!--<button class="collapsed-comments" ng-href="#expand">view {{comments.length}} more comments<i class="ion-chevron-down"></i></button>-->
+                </ion-list>
+            </div><!--videogular-container -->
+          </div><!-- VidCtrl -->
+          <canvas id="spotlight"></canvas>
+        </div><!-- modal -->
+      </script>
+<!--end video-->     
+        
+        
+    </div>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html ng-app="DemoApp">
+    <head>
+        <meta charset="UTF-8">
+        <title>angular-carousel demo</title>
+        <meta name="viewport" content="width=620, user-scalable=no">
+        <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
+        <link href="../ionic/css/ionic.css" rel="stylesheet">
+    <link href="../../css/style.css" rel="stylesheet">
+    <link href="./dist/angular-carousel.min.css" rel="stylesheet"/>
+    </head>
+
+        <div class="modal" ng-controller="VidCtrl" id="vidctrl">
+          <i class="icon ion-ios7-close close-modal" ng-click="closeModal(1)"></i>
+          
+        <ul rn-carousel rn-carousel-buffered>
+          <li>
+              <video src="https://console.developers.google.com/m/cloudstorage/b/bm-vids/o/%20Bus%20driver%20flies%20through%20windshield.mp4">
+              </video>
+          </li>
+          <li>
+                <video src="https://console.developers.google.com/m/cloudstorage/b/bm-vids/o/Silent%20Disco%20on%20the%20Bart%20last%20night....mp4">
+                </video>
+            </li>
+            <li>
+                <video src="https://console.developers.google.com/m/cloudstorage/b/bm-vids/o/Man%20dives%20into%20water%20comes%20face%20to%20face%20with%20great%20white%20shark.mp4">
+                </video>
+            </li>
+        </ul>
+        <!--
+            <ul rn-carousel rn-carousel-controls rn-carousel-index="carouselIndex" rn-carousel-buffered class="carousel1" style="height: 400px;">
+                <li ng-repeat="slide in slides track by slide.id" ng-class="'id-' + slide.id">
+                    <div ng-style="{'background-image': 'url(' + slide.img + ')'}" style="height: 400px;"  class="bgimage">
+                        #{{ slide.id }}
+                    </div>
+                </li>
+            </ul>
+        -->
+        </div>
+    </div>
+    <div class="playlist">
+        <ul>
+            <li><a ng-click="controller.setVideo(0)">Bus Driver</a></li>
+            <li><a ng-click="controller.setVideo(1)">Silent Disco</a></li>
+            <li><a ng-click="controller.setVideo(2)">Shark</a></li>
+        </ul>
+    </div>
+</div>
+
+    <script src="../ionic/js/ionic.bundle.min.js"></script>
+    <!-- angular-carousel - used for video swipe left/right. https://github.com/revolunet/angular-carousel -->
+    <!-- req'd by angular-carousel -->
+    <script src="../angular-touch/angular-touch.min.js"></script>
+    <script src="./src/directives/rn-carousel.js"></script>
+   
+    
+    <script src="./dist/angular-carousel.min.js"></script>
+    <!--<script src="./src/angular-carousel.js"></script>
+    <script src="./src/directives/rn-carousel.js"></script>
+    <script src="./src/directives/rn-carousel-indicators.js"></script>
+    <script src="./src/directives/sliceFilter.js"></script>
+    <script src="./src/directives/shifty.js"></script>
+     -->
+    <script>
+
+        angular.module('DemoApp', [
+            'angular-carousel'
+        ])
+
+        .controller('VidCtrl', function($scope, $http) {
+
+            $http.get('http://gdata.youtube.com/feeds/api/standardfeeds/most_popular?v=2&alt=json').success(function(data) {
+                $scope.items = data.feed.entry;
+            }).error(function(data) {
+                alert('cannot fetch youtube API');
+            });
+/**
+            $scope.colors = ["#fc0003", "#f70008", "#f2000d", "#ed0012", "#e80017", "#e3001c", "#de0021", "#d90026", "#d4002b", "#cf0030", "#c90036", "#c4003b", "#bf0040", "#ba0045", "#b5004a", "#b0004f", "#ab0054", "#a60059", "#a1005e", "#9c0063", "#960069", "#91006e", "#8c0073", "#870078", "#82007d", "#7d0082", "#780087", "#73008c", "#6e0091", "#690096", "#63009c", "#5e00a1", "#5900a6", "#5400ab", "#4f00b0", "#4a00b5", "#4500ba", "#4000bf", "#3b00c4", "#3600c9", "#3000cf", "#2b00d4", "#2600d9", "#2100de", "#1c00e3", "#1700e8", "#1200ed", "#0d00f2", "#0800f7", "#0300fc"];
+
+            function addSlide(target, style) {
+                var i = target.length;
+                target.push({
+                    id: (i + 1),
+                    label: 'slide #' + (i + 1),
+                    img: 'http://lorempixel.com/450/300/' + style + '/' + ((i + 1) % 10) ,
+                    color: $scope.colors[ (i*10) % $scope.colors.length],
+                    odd: (i % 2 === 0)
+                });
+            };
+
+            $scope.carouselIndex = 3;
+           
+            function addSlides(target, style, qty) {
+                for (var i=0; i < qty; i++) {
+                    addSlide(target, style);
+                }
+            }
+
+            // 1st ngRepeat demo
+            $scope.slides = [];
+            addSlides($scope.slides, 'sports', 50);
+**/
+        });
+
+    </script>
+</html>

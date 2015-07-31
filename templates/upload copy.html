@@ -1,0 +1,318 @@
+<style>
+form map {
+  position: relative;
+  height: 25%;
+  width: 100%;
+}
+.container {
+  width:100%;
+  display:block; 
+  position:absolute; 
+  height:100vh;
+  margin: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right:0;
+  bottom:0;
+  margin:auto;
+  max-width:100%;
+  max-height:100%;
+  overflow:auto;    
+}
+#upload {
+  width: 100%;
+  border: white solid 1px;
+}
+#upload input, textarea#description {
+  width: 100%;
+  height: 100%;
+  border: none;
+  margin: 0;
+  color: #777;
+  border-bottom: solid 2px #bbb;
+  padding: 1em;
+  font-size: 14px;
+  font-family: "Montserrat Bold", "Helvetica Neue", Helvetica, sans-serif;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: transparent;
+}
+#uploadPin {
+  width: 50px;
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  right: 50%;
+  z-index: 50;
+}
+.labels {
+     background-color: transparent;
+     font-size: 10px;
+     font-weight: bold;
+     text-align: center;
+     width: 40px; 
+     padding-top: 1px;    
+     white-space: nowrap;
+     z-index: 0;
+   }
+.pin {
+  font-size: 40px;
+  z-index: 1;
+  font-weight: bold;
+  cursor: 
+}
+.symbol {
+  font-size: 22px;
+  font-weight: bold;
+  color: white;
+  position: relative;
+  right: 31px;
+  bottom: 8px;//8 or 14
+  z-index: 2;
+}
+.icon-Geo2 .symbol {
+  font-size: 22px;
+  color: white;
+  position: relative;
+  right: 31px;
+  bottom: 14px;//8 or 14
+  z-index: 2;
+}
+.icon-Geo2.pin:active {
+  -webkit-filter: saturate(1.2) contrast(1.2);
+}
+.icon-Humor.symbol {
+  font-size: 22px;
+  right: 31px;
+  bottom: 14px;
+}
+.icon-Geo2.pin.awesome {
+  //color: #10E8E8;
+  //color: #4682B4;
+  //color: #00a2AA;
+  color: #00899B;
+}
+.icon-Music-Note2:before {
+  content: "\eae5";
+  font-weight: bold;
+  font-size: 21px;
+}
+.icon-Music-Note2.symbol {
+  color: #fff;
+}
+.icon-Geo2.pin.music {
+  color: #943f96;
+}
+.icon-Police.symbol {
+  bottom: 13px;
+}
+.icon-Geo2.pin.police {
+  color: #00499B;;
+}
+.icon-Fire-Flame.symbol {
+  font-size: 23px;
+}
+.icon-Geo2.pin.fire {
+  color: #FF0030;
+}
+.icon-Funky.symbol {
+  right: 32px;
+  font-size: 19px;
+  bottom: 16px;
+}
+.icon-Geo2.pin.cool {
+  color: #98EB10;
+}
+.icon-Geo2.pin.sports {
+  color: #FF6103;
+}
+.icon-Environmental-3.symbol {
+  font-size: 19px;
+  right: 29px;
+  bottom: 15px;
+}
+.icon-Geo2.pin.green {
+  color: #228B22;
+}
+.icon-Speach-BubbleDialog.symbol {
+  right: 30px;
+  bottom: 13px;
+  font-size: 20px;
+  color: #fff;
+  background: #fff;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.icon-Geo2.pin.dialog {
+  background: linear-gradient(#65b849 17%, #f7b423 17%, #f7b423 34%, #f58122 34%, #f58122 50%, #de3a3c 50%, #de3a3c 66%, #943f96 66%, #943f96 82%, #009fd9 82%, #009fd9 86%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.icon-Martini-Glass:before {
+  font-weight: bold; 
+}
+.icon-Martini-Glass.symbol{
+  bottom: 10px;
+}
+.icon-Geo2.pin.party {
+  color: #CD1076;
+}
+.icon-Heart.symbol {
+  bottom: 11px;
+}
+.icon-Geo2.pin.love {
+  color: #DC143C;
+}
+.icon-Surprise.symbol {
+  background: #fff;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.icon-Geo2.pin.whoa {
+  //background: -webkit-linear-gradient(#000080, #65b849);
+  //-webkit-background-clip: text;
+  //-webkit-text-fill-color: transparent;
+  color: #000;
+}
+.icon-Cheetah.symbol {
+  bottom: 11px;
+}
+.icon-Geo2.pin.animals {
+  color: #A52A2A;
+}
+.icon-Geo2.pin.vehicle {
+  color: #555;
+}
+.icon-Stethoscope.symbol {
+  bottom: 12px;
+  font-size: 20px;
+  right: 30px;
+  font-weight: bold;
+}
+.icon-Geo2.pin.medical {
+  color: #FFD700;
+}
+.icon-Pencil.symbol {
+  font-size: 20px;
+  right: 29px;
+  background: linear-gradient(#65b849 17%, #f7b423 17%, #f7b423 34%, #f58122 34%, #f58122 50%, #de3a3c 50%, #de3a3c 66%, #943f96 66%, #943f96 82%, #009fd9 82%, #009fd9 86%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.icon-Geo2.pin.art {
+  color: #F9eb10; 
+}
+.icon-Batman-Mask.symbol {
+  right: 30px;
+  bottom: 16px;
+  font-size: 20px;
+  color: #000;
+}
+.icon-Geo2.pin.hero {
+  color: #2F4F4F;
+}
+i {
+  //float: left;
+}
+body {
+  font-size: 25px;
+  font-family: "Montserrat Bold", "Helvetica Neue", Helvetica, sans-serif;
+  background: whitesmoke;
+}
+.wide-as-needed {
+  overflow: scroll;
+  white-space: nowrap;
+  padding-top: .2em;
+}
+.scroll { 
+  min-width: 100%;
+}
+input#submitVid {
+  background: #1fc330;
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 2px;
+  font-size: 1.1em;
+  -webkit-transition: all 4s cubic-bezier(0.445, 0.050, 0.550, 0.950);
+  z-index: 1;
+}
+input#submitVid:hover{
+  color: transparent;
+}
+.btn-wrap {
+  position: relative;
+  width:100%;
+  height:100%;
+  overflow: hidden;
+}
+#button-bg {
+  display: inline-block;
+  position: absolute;
+  width:100%;
+  height:100%;
+  top: 0;
+  z-index: 0;
+  background: linear-gradient(#1fc330 17%, #f7b423 17%, #f7b423 34%, #f58122 34%, #f58122 50%, #de3a3c 50%, #de3a3c 66%, #943f96 66%, #943f96 82%, #009fd9 82%, #009fd9 86%);
+  -webkit-transition: all 4s cubic-bezier(0.230, 1.000, 0.320, 1.000); 
+  font-size: 1.2em;
+  font-family: "Montserrat Bold", "Helvetica Neue", Helvetica, sans-serif;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #fff;
+  text-align: center;
+  padding-top: 7%;
+  top: 100%;
+  z-index: 2;
+}
+
+</style>
+<link rel="stylesheet" type="text/css" href="/img/icons/fonts/line/style.css" />
+<link rel="stylesheet" type="text/css" href="/img/icons/fonts/solid/style.css" />
+<ion-view view-title="Second page">
+  <ion-content class="padding">
+    <button class="button icon ion-ios-arrow-back" ng-click="goBack()" nav-direction="back">Go Back</button>
+    <form name="upload" id="upload">
+      <input ng-model="title" id="upload_title" name="title" placeholder="Your title" required/>
+      <br />
+      <map disable-default-u-i="true">
+      </map>
+      <div style="margin-top: .3em;
+        overflow-x: scroll;
+        padding: .2em 0;
+        height: 50px;" id="pin_row" id="pin_panel" ng-model="pin_panel">
+        <ion-scroll direction="x" class="wide-as-needed">
+          <i class="icon-Geo2 pin awesome"><i class="icon-Humor symbol"></i></i>
+          <i class="icon-Geo2 pin music"><i class="icon-Music-Note2 symbol"></i></i>
+          <i class="icon-Geo2 pin love"><i class="icon-Heart symbol"></i></i>
+          <i class="icon-Geo2 pin art"><i class="icon-Pencil symbol"></i></i>
+          <i class="icon-Geo2 pin party"><i class="icon-Martini-Glass symbol"></i></i>
+          <i class="icon-Geo2 pin police"><i class="icon-Police symbol"></i></i>
+          <i class="icon-Geo2 pin whoa"><i class="icon-Surprise symbol"></i></i>
+          <i class="icon-Geo2 pin vehicle"><i class="icon-Car-2 symbol"></i></i>
+          <i class="icon-Geo2 pin sports"><i class="icon-Baseball symbol"></i></i>
+          <i class="icon-Geo2 pin medical"><i class="icon-Stethoscope symbol"></i></i>
+          <i class="icon-Geo2 pin dialog"><i class="icon-Speach-BubbleDialog symbol"></i></i>
+          <i class="icon-Geo2 pin animals"><i class="icon-Cheetah symbol"></i></i>
+          <i class="icon-Geo2 pin fire"><i class="icon-Fire-Flame symbol"></i></i>
+          <i class="icon-Geo2 pin green"><i class="icon-Environmental-3 symbol"></i></i>
+          <i class="icon-Geo2 pin hero"><i class="icon-Batman-Mask symbol"></i></i>
+        </ion-scroll>
+      </div>
+      <textarea ng-model="description" id="upload_description" name="description" placeholder="what's happening?" maxlength="210">
+      </textarea>
+      <input placeholder="When?" type="text" onfocus="(this.type='datetime-local');" id="upload_when" ng-model="when" step="600" />
+      <input type="hidden" id="upload_url" />
+      <input type="file" id="filePicker" />
+      <div class="btn-wrap"
+        <input type="submit" id="submitVid" class="button col-center" />
+        <span id="button-bg">Success!</span>
+        <input type="button" id="cancelVid" class="button col-center" value="Cancel"/>
+        <span id="button-bg">Cancel</span>
+      </div>
+    </form>
+  </ion-content>  
+</ion-view>
+
