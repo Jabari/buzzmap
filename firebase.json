@@ -1,9 +1,0 @@
-{
-  "firebase": "buzzmapv0",
-  "public": ".",
-  "ignore": [
-    "firebase.json",
-    "**/.*",
-    "**/node_modules/**"
-  ]
-}

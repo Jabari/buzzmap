@@ -4,83 +4,16 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-/**
-document.addEventListener('deviceready', function() { 
-  angular.bootstrap(document, ['app']);
-  var deviceProperties = {
-                      'Device Model': device.model,
-                      'Device Cordova': device.cordova,
-                      'Device Platform': device.platform,
-                      'Device UUID': device.uuid,
-                      'Device Version': device.version,
-                      'Device Name': device.name
-                    };
-                    alert(deviceProperties);
-});
+var app = angular.module('buzzmap', ['ionic', 'firebase', 'buzzmap.controllers', 'ngMap'])
 
-var deviceProperties = [];
-    deviceProperties = {
-                        'Device Model': device.model,
-                        'Device Cordova': device.cordova,
-                        'Device Platform': device.platform,
-                        'Device UUID': device.uuid,
-                        'Device Version': device.version,
-                        'Device Name': device.name
-                      }
-  var deviceProperties = document.getElementById('deviceProperties');
-    element.innerHTML = 'Device Model: '    + device.model    + '<br />' +
-                        'Device Cordova: '  + device.cordova  + '<br />' +
-                        'Device Platform: ' + device.platform + '<br />' +
-                        'Device UUID: '     + device.uuid     + '<br />' +
-                        'Device Version: '  + device.version  + '<br />' +
-                        'Device Name: '  + device.name  + '<br />';
-  **/
-var app = angular.module('buzzmap', ['ionic', 'ngCordova', 'firebase', 'ngMap', 'yaru22.angular-timeago', 'buzzmap.services'])
-.constant('appName', 'BUZZMAP')
-.constant('fb_rt', 'https://buzzmapv0.firebaseio.com/')
-.factory('fb_factory', function($firebase, fb_rt) {
-  return {
-    getAuthData: function(key) {
-      return new Firebase(fb_rt + '/' + key);
-    },
-    getVidData: function() {
-      return new Firebase(fb_rt + '/videos');
-    },
-    getUserData: function() {
-      return new Firebase(fb_rt + '/users');
-    },
-    getAllData: function() {
-      return new Firebase(fb_rt);
-    }
-  }
-})
-.run(function($ionicPlatform, $rootScope, $firebaseAuth, $ionicLoading, $window, $timeout, $ionicHistory) {
+.run(function($ionicPlatform, $rootScope, $firebase, $firebaseAuth, $ionicLoading, $window) {
   $ionicPlatform.ready(function() {
-    document.addEventListener("offline", function() {
-        alert("$#!+, you have a bad internet connection!");
-    });
-    if(window.navigator && window.navigator.splashscreen) {
-      $timeout(function() {
-        window.navigator.splashscreen.hide();
-      }, 5000);
-    }
-  });
-
+    console.log("hello from app.js");
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
-
-    var deviceInformation = ionic.Platform.device();
-
-    var isWebView = ionic.Platform.isWebView();
-    var isIPad = ionic.Platform.isIPad();
-    var isIOS = ionic.Platform.isIOS();
-    var isAndroid = ionic.Platform.isAndroid();
-    var isWindowsPhone = ionic.Platform.isWindowsPhone();
-    /**
     if(window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
     }
-    **/
     if(window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
@@ -129,9 +62,7 @@ var app = angular.module('buzzmap', ['ionic', 'ngCordova', 'firebase', 'ngMap', 
         }
       });
     }
-    $rootScope.goBack = function(){
-      $ionicHistory.goBack();
-    } 
+  });
 })         
 
 .config(function($stateProvider, $urlRouterProvider) {
@@ -144,6 +75,25 @@ var app = angular.module('buzzmap', ['ionic', 'ngCordova', 'firebase', 'ngMap', 
       controller: 'AppCtrl'
     })
 
+    .state('app.browse', {
+      url: "/browse",
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/browse.html"
+        }
+      }
+    })
+
+    .state('app.playlists', {
+      url: "/playlists",
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/playlists.html",
+          controller: 'PlaylistsCtrl'
+        }
+      }
+    })
+
     .state('app.map', {
       url: "/map",
       views: {
@@ -154,26 +104,26 @@ var app = angular.module('buzzmap', ['ionic', 'ngCordova', 'firebase', 'ngMap', 
       }
     })
 
-    .state('upload', {
-      url: "/upload",
-      templateUrl: "templates/upload.html",
-      controller: 'UploadCtrl'
-    })
-
-
-    .state('app.account', {
-      url: "/account",
+    .state('app.videog', {
+      url: "/videog",
       views: {
         'menuContent' :{
-          templateUrl: "templates/account.html",
-          controller: 'PlaylistsCtrl',
-          authRequired: true
+          templateUrl: "templates/videog.html",
+          controller: 'VidCtrl'
         }
       }
     })
 
-    
-
+    .state('app.single', {
+      url: "/playlists/:playlistId",
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/playlist.html",
+          controller: 'PlaylistCtrl'
+        }
+      }
+    });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/map');
 });
+

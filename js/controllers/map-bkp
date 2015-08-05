@@ -1,0 +1,131 @@
+
+.controller('MapCtrl', function($scope, $ionicloading, $compile) {
+     		
+       		//Initialize map
+        	var map;
+        	var pos;
+			                                   
+			function initialize() {
+			  var mapOptions = {
+			  	zoom: 18,
+			  	disableDefaultUI:true,
+			    rotateControl:true,
+			    scaleControl:true,
+			    mapTypeId: google.maps.MapTypeId.ROADMAP
+			  };
+			  
+			  map = new google.maps.Map(document.getElementById('map'), mapOptions);
+			  // HTML5 geolocation
+			  if(navigator.geolocation) {
+			    navigator.geolocation.getCurrentPosition(function(position) {
+			      pos = new google.maps.LatLng(position.coords.latitude,
+			                                       position.coords.longitude);
+			
+			      var infowindow = new google.maps.InfoWindow({
+			        map: map,
+			        position: pos,
+			        content: 'Your location'
+			      });			
+			      map.setCenter(pos);
+			    }, 
+			    function() {
+			      handleNoGeolocation(true);
+			    });
+			  } else {
+			    // Browser doesn't support Geolocation
+			    handleNoGeolocation(false);
+			    pos = new google.maps.LatLng(37.7749, -122.4194);
+			  }
+			  
+			  function HomeControl(controlDiv, infowindow) {
+				  controlDiv.style.padding = '2px';
+				  var controlUI = document.createElement('div');
+				  controlUI.setAttribute("class", "ion-android-locate");
+				  controlUI.style.cursor = 'pointer';
+				  controlUI.style.textAlign = 'center';
+				  controlUI.style.position= 'absolute';
+				  controlUI.title = 'My location';
+				  controlUI.style.fontSize='21px';
+				  controlUI.style.padding = '4px';
+				  controlDiv.appendChild(controlUI);
+				  var controlText = document.createElement('div');
+				  controlText.style.paddingLeft = '4px';
+				  controlText.style.paddingRight = '4px';
+				  controlUI.appendChild(controlText);
+				  console.log("pos is:" + pos);
+				  console.log(map);
+				  console.log(controlDiv);
+				  
+				  // Setup click-event listener: simply set the map to London
+				  google.maps.event.addDomListener(controlUI, 'click', function() {
+				    map.setCenter(pos);
+				  });
+				}
+			  // Create a DIV to hold the control and call HomeControl()
+			  var homeControlDiv = document.createElement('div');
+			  var homeControl = new HomeControl(homeControlDiv, map);
+			  homeControlDiv.index = 1;
+			  map.controls[google.maps.ControlPosition.TOP_LEFT].push(homeControlDiv);
+
+			}
+			
+			//If we can't find user's location cuz gps is off or user denies location privileges
+			function handleNoGeolocation(errorFlag) {
+			  if (errorFlag) {
+			    var content = 'Sorry, your phone\'s geolocation service has failed.';
+			  } else {
+			    var content = 'Error: Your browser doesn\'t support geolocation.';
+			  }
+			
+			  var options = {
+			    map: map,
+			    position: new google.maps.LatLng(37.7749, -122.4194),
+			    content: 'City of San Francisco'
+			  };
+			  
+			  console.log("your position is:" + options.position);
+			  var infowindow = new google.maps.InfoWindow(options);
+			  map.setCenter(options.position);
+			  window.pos = options.position;
+			}
+			
+			google.maps.event.addDomListener(window, 'load', initialize);			
+					
+        
+	        //White dialog box
+		
+		var push;
+
+	//Mark events with markers and popups
+		function onMapClick(e) {
+			popup
+				.setLatLng(e.latlng)
+				.setContent('<form id="post" onsubmit="postIt(); return false;"><input type="text" class="textInput" id="textInput" placeholder="What&#39;s happpening?" autofocus="autofocus" /><input type="button" class="submitText" ontouchstart="postIt()"/></form>')				
+				.openOn(map);
+			window.e = e;
+			$('.leaflet-popup').show();
+			$('#textInput').focus();
+			$('.leaflet-popup-content').css("width", "148px");	
+				
+			
+		}
+		map.on('click', onMapClick);
+	//If we can't find user's location cuz gps is off or user denies location privileges
+	function onLocationError(e) {
+    		alert(e.message);
+	}		
+	map.on('locationerror', onLocationError);
+	//var userLocation = onLocationFound(e.latlang);
+	
+		
+		function postIt() {
+			push = document.getElementById("textInput").value;
+			//alert('New event posted');
+			L.marker(e.latlng).addTo(map)
+				.bindPopup(push);
+			$('.leaflet-popup').hide();			
+		 }
+		map.on('click', function(e) {
+        map.panTo(e.layer.getLatLng());
+    });
+});

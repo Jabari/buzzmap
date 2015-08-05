@@ -62,7 +62,7 @@ app.factory('Photo', function($q, $cordovaCamera, $cordovaCapture, $state, $cord
         var options = {
           duration: 61, 
           video: true, 
-          audio: true
+          audio: true,
           limit: 1
         };
         $cordovaCapture.captureVideo(options).then(
@@ -106,138 +106,51 @@ app.factory('Photo', function($q, $cordovaCamera, $cordovaCapture, $state, $cord
     },
     uploadPicture: function(imageData) {
       console.log('uploadPicture service');
-      var q = $q.defer();
+      var s3Uploader = (function () {
 
-      AWS.config = new AWS.Config();
-      AWS.config.accessKeyId = "AKIAJFG7B7NV4RSY23DA";
-      AWS.config.secretAccessKey = "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";
-      var bucket = new AWS.S3({params: {Bucket: 'bm-vids'}});
-      var params = {
-        Key: Date.now() + imageData[0].name, 
-        ContentType: "image/jpeg", 
-        Body: imageData[0].fullPath //how do I insert ACTUAL file here???
-      }
-      /**
-      var params = {
-        Key: Date.now() + "video.mp4", 
-        ContentType: "video/mp4", 
-        Body: blob
-      };
-      **/
-      bucket.upload(params, function (err, data) {
-        console.log(params);
-        console.log("err: " + err);
-        console.dir(data);
-        console.log(data.Location);        
-      });
-      /**
-      function dataURItoBlob(imageData) {
-        // convert base64/URLEncoded data component to raw binary data held in a string
-        console.log(imageData);
-        var byteString;
-        if (imageData.split(',')[0].indexOf('base64') >= 0)
-            byteString = atob(imageData.split(',')[1]);
-        else
-            byteString = unescape(imageData.split(',')[1]);
+        var s3URI = encodeURI("https://bm-vids.s3-website-us-west-1.amazonaws.com/"), //destinationBucket.s3.amazonaws.com
+            policyBase64 = "ew0KICAgICAgICAgICAgImV4cGlyYXRpb24iOiAiMjAyMC0xMi0zMVQxMjowMDowMC4wMDBaIiwNCiAgICAgICAgICAgICJjb25kaXRpb25zIjogWw0KICAgICAgICAgICAgICAgIHsiYnVja2V0IjogImJtLXZpZHMifSwNCiAgICAgICAgICAgICAgICBbInN0YXJ0cy13aXRoIiwgIiRrZXkiLCAiIl0sDQogICAgICAgICAgICAgICAgeyJhY2wiOiAncHVibGljLXJlYWQnfSwNCiAgICAgICAgICAgICAgICBbInN0YXJ0cy13aXRoIiwgIiRDb250ZW50LVR5cGUiLCAiIl0sDQogICAgICAgICAgICAgICAgWyJjb250ZW50LWxlbmd0aC1yYW5nZSIsIDAsIDUyNDI4ODAwMDAwMF0NCiAgICAgICAgICAgIF0NCiAgICAgICAgfQ==";        
+            signature = "f07c45acbb7d6e1c9eb23a162eaceb98fdffde55b9cb1bc9779a43d273d84c6f",
+            awsKey = 'AKIAJFG7B7NV4RSY23DA',
+            acl = "public-read";
 
-        // separate out the mime component
-        var mimeString = imageData.split(',')[0].split(':')[1].split(';')[0];
+        function upload(imageURI, fileName) {
 
-        // write the bytes of the string to a typed array
-        var ia = new Uint8Array(byteString.length);
-        for (var i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
+          var deferred = $.Deferred(),
+              ft = new FileTransfer(),
+              options = new FileUploadOptions();
+
+          options.fileKey = "file";
+          options.fileName = fileName;
+          options.mimeType = "image/jpeg";
+          options.chunkedMode = false;
+          options.params = {
+              "key": fileName,
+              "AWSAccessKeyId": awsKey,
+              "acl": acl,
+              "policy": policyBase64,
+              "signature": signature,
+              "Content-Type": "image/jpeg"
+          };
+
+          ft.upload(imageURI, s3URI,
+              function (e) {
+                  deferred.resolve(e);
+              },
+              function (e) {
+                  deferred.reject(e);
+              }, options);
+
+          return deferred.promise();
+
         }
 
-        return new Blob([ia], {type:mimeString});
-      }
-      **/
+        return {
+            upload: upload
+        }
+
+      }());
       
-      function dataURItoBlob(dataURI) {
-        // convert base64/URLEncoded data component to raw binary data held in a string
-        //encodeURI(dataURI);
-
-        /**
-        var byteString;
-        if (dataURI.split(',')[0].indexOf('base64') >= 0)
-            byteString = atob(dataURI.split(',')[1]);
-        else
-            byteString = unescape(dataURI.split(',')[1]);
-
-        // separate out the mime component
-        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-
-        // write the bytes of the string to a typed array
-        var ia = new Uint8Array(byteString.length);
-        for (var i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
-        }
-
-        return new Blob([ia], {type:mimeString});
-      }
-      function _arrayBufferToBase64(buffer) {
-        var binary = '';
-        var bytes = new Uint8Array(buffer);
-        var len = bytes.byteLength;
-        for (var i = 0; i < len; i++) {
-            binary += String.fromCharCode(bytes[i]);
-        }
-        return window.btoa(binary);
-        **/
-    };
-    
-      /**
-        var byteString = atob(dataURI.split(',')[1]);
-        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-
-        var ab = new ArrayBuffer(byteString.length);
-        var ia = new Uint8Array(ab);
-        for (var i = 0; i < byteString.length; i++)
-        {
-          ia[i] = byteString.charCodeAt(i);
-        }
-
-        var bb = new Blob([ab], { "type": mimeString });
-        return bb;
-      }
-      **/
-      //From there, appending the data to a form such that it will be uploaded as a file is easy:
-
-      //var dataURL = canvas.toDataURL('image/jpeg', 0.5);
-      //var blob = dataURItoBlob(imageData);
-      //console.log(blob);
-      //var blob1 = dataURItoBlob("data:image/jpeg;base64,"+imageData);
-      //console.log(blob);
-      //var fd = new FormData(document.forms[0]);
-      //fd.append("canvasImage", blob);
-      //file = file.substring(location.pathname.lastIndexOf('/')+1);
-      //var filename = imageData[0].fullPath.split(/\//).pop();
-      //console.log("filename: " + filename);
-      //check it out on iOS
-      
-      /**
-      var options = new FileUploadOptions();
-      options.fileKey = "image";
-      options.fileName = "report.jpg";
-      options.mimeType = "image/jpeg";
-      options.chunkedMode = false; // Absolutely required for https uploads!
-      options.params = {};
-
-      var ft = new FileTransfer();var url = "https://bm-vids.s3-website-us-west-1.amazonaws.com";
-      ft.upload(imageData, encodeURI('ApiUrl.get() + '/photos.json''),
-      //ft.upload(imageData, encodeURI(ApiUrl.get() + '/photos.json'),
-        function(response) {
-          console.log("Done uploading file");
-          q.resolve(response);
-        },
-        function(error) {
-          for (var key in error) {
-            console.log("upload error[" + key + "]=" + error[key]);
-          }
-          q.reject(error);
-        }, options);
-        **/
-      return q.promise;       
     }
     //upload
   };

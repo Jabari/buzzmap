@@ -7,40 +7,37 @@
 	<link rel="stylesheet" href="styles.css">
 </head>
 <div ng-app="AppCtrl">
-<div class="modal">
-          <i class="icon ion-ios7-close close-modal" ng-click="closeModal(1)"></i>
-          <div ng-controller="VidCtrl as controller">
-            <div class="videogular-container">
-              <videogular vg-player-ready="controller.onPlayerReady($API)" 
-                          vg-complete="controller.onCompleteVideo()" 
-                          vg-theme="controller.config.theme.url">
-                <vg-media vg-src="controller.videos[0].sources"
-                      vg-tracks="controller.config.tracks">
-                </vg-media>
-                <vg-controls>
-                  <vg-scrub-bar>
-                    <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-                  </vg-scrub-bar>
-                  <vg-time-display>{{ currentTime | date:'mm:ss' }}</vg-time-display>
-                  <vg-volume>
-                    <vg-mute-button></vg-mute-button>
-                  </vg-volume>
-                  <vg-fullscreen-button></vg-fullscreen-button>
-                </vg-controls>
-                <vg-overlay-play></vg-overlay-play>
-                <vg-buffering></vg-buffering>
-                <vg-poster vg-url='controller.config.plugins.poster'></vg-poster>
-              </videogular>
-            </div><!--videogular-container -->
-            <div class="playlist">
-              <ul>
-                <li><a ng-click="controller.setVideo(0)">Bus Driver</a></li>
-                <li><a ng-click="controller.setVideo(1)">Silent Disco</a></li>
-                <li><a ng-click="controller.setVideo(2)">Shark</a></li>
-              </ul>
-            </div>
-          </div><!-- VidCtrl -->
-        </div><!-- modal -->
+<div ng-controller="VidCtrl as controller">
+	<div class="videogular-container">
+		<videogular vg-player-ready="controller.onPlayerReady($API)" vg-complete="controller.onCompleteVideo()" vg-theme="controller.config.theme.url">
+			<vg-media vg-src="controller.videos[1].sources"
+					  vg-tracks="controller.config.tracks">
+			</vg-media>
+
+			<vg-controls>
+				<vg-scrub-bar>
+					<vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+				</vg-scrub-bar>
+				<vg-time-display>{{ currentTime | date:'mm:ss' }}</vg-time-display>
+				<vg-volume>
+					<vg-mute-button></vg-mute-button>
+				</vg-volume>
+				<vg-fullscreen-button></vg-fullscreen-button>
+			</vg-controls>
+
+			<vg-overlay-play></vg-overlay-play>
+			<vg-buffering></vg-buffering>
+			<vg-poster vg-url='controller.config.plugins.poster'></vg-poster>
+		</videogular>
+	</div>
+	<div class="playlist">
+		<ul>
+			<li><a ng-click="controller.setVideo(0)">Bus Driver</a></li>
+			<li><a ng-click="controller.setVideo(1)">Silent Disco</a></li>
+			<li><a ng-click="controller.setVideo(2)">Shark</a></li>
+		</ul>
+	</div>
+</div>
 </div>
 
 
