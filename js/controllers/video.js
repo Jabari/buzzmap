@@ -9,19 +9,10 @@ angular.module('AppCtrl',
             "com.2fdevs.videogular.plugins.buffering"
         ]
     )
-.controller('VidCtrl',
-        ["$sce", "$timeout", "$scope", "$http", function ($sce, $timeout, $scope, $http) {
+app.controller('VidCtrl', function ($sce, $timeout, $scope, $http) {
+    document.addEventListener('deviceready', function() {        
             
-            /**
-            $http.get('http://gdata.youtube.com/feeds/api/standardfeeds/most_popular?v=2&alt=json').success(function(data) {
-                $scope.items = data.feed.entry;
-                for(var i = 0;i<$scope.items.length;i++) 
-                console.log($scope.items[i].url + '\n');
-            }).error(function(data) {
-                alert('cannot fetch youtube API');
-            });
-            **/
-            
+            console.log("video.js");
             var controller = this;
             controller.state = null;
             controller.API = null;
@@ -59,12 +50,12 @@ angular.module('AppCtrl',
             }
         ];
             $scope.videos = controller.videos;
-            console.log($scope.videos);
+            console.log("video.js " + $scope.videos);
             controller.config = {
                 preload: "none",
                 autoHide: false,
                 autoHideTime: 2000,
-                autoPlay: false,
+                autoPlay: true,
                 sources: controller.videos[0].sources,
                 theme: {
                     url: "http://www.videogular.com/styles/themes/default/latest/videogular.css"
@@ -77,5 +68,5 @@ angular.module('AppCtrl',
                 controller.config.sources = controller.videos[index].sources;
                 $timeout(controller.API.play.bind(controller.API), 100);
             };
-        }]
-    );
+        }, false);
+    });

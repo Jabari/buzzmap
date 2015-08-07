@@ -1,7 +1,6 @@
 <ion-side-menus>
-
   <ion-pane ion-side-menu-content>
-    <ion-nav-bar class="bar-clear nav-title-slide-ios7 nav-tools" id="nav-bar">
+    <ion-nav-bar class="bar-clear nav-title-slide-ios" id="nav-bar">
       <ion-nav-back-button class="button-clear">
         <i class="icon ion-ios7-arrow-back"></i> 
         {{getPreviousTitle() || Back}}
@@ -9,39 +8,66 @@
     </ion-nav-bar>
     <ion-nav-view name="menuContent" animation="slide-left-right"></ion-nav-view>
   </ion-pane>
-
   <ion-side-menu side="left" ng-controller="searchCtrl">
-    <header class="bar bar-header bar-dark">
-      <input type="search" id="search_tag" class="ion-ios7-search" placeholder="#" value="#" ng-model="search" />
+    <header class="bar bar-header bar-light">
+      <!--<input type="search" id="search_tag" class="ion-ios7-search" placeholder="#" value="#" ng-model="search" />-->
     </header>
     <ion-content class="has-header">
       <ion-list>
+      <style>
+      .list .item.item-accordion {
+  line-height: 38px;
+  padding-top: 0;
+  padding-bottom: 0;
+  transition: 0.09s all linear;
+}
+.list .item.item-accordion.ng-hide {
+  line-height: 0px;
+}
+.list .item.item-accordion.ng-hide-add,
+.list .item.item-accordion.ng-hide-remove {
+  display: block !important;
+}
+</style>
         <!--<ion-toggle ng-model="map_event_toggle" toggle-class="toggle-map" style="color: #e93236">
           <span>Map</span>
           <span style="float: right; margin-right: -85px;">Events</span> -->
-
-        <ion-item nav-clear menu-close href="#/app/map">
-          Map  
+        <ion-item nav-clear menu-close href="#/app/map" class="category_menu">
+          &nbsp;
+          Home  
         </ion-item>
-        <ion-item nav-clear menu-close ng-click="login()">
-          Login
+        <!-- Next 3 ion-items are exclusive, i.e. only one item may be displayed simultaneously -->
+        <ion-item class="item-royal" nav-clear id="authDisplay" ng-show="isLoggedIn" menu-close href="#/app/account" class="category_menu">
+          {{authDisplay}}
         </ion-item>
-        <ion-item nav-clear href="#/app/videog">
-          <div class="ion-social-freebsd-devil category_menu"></div>
+        <ion-item nav-clear id="enter" ng-hide="isLoggedIn">
+          <button class="button button-calm button-outline" menu-close ng-click="login()" id="login_btn">
+            Log in
+          </button>
+          <button class="button button-balanced" menu-close ng-click="signup()" id="signup_btn">
+            Sign up
+          </button>
         </ion-item>
-        <ion-item nav-clear href="#/app/browse" class="choosen">
-          <div class="ion-ios7-people category_menu"></div>
+        <ion-item class="category_menu choosen" ng-controller="PinCtrl" ng-click="showPins = !showPins"> <!--ng-class="{active: isPinShown(pin)}"-->
+          <i class="icon center" id="pm_pins" ng-class="showPins === false ? 'ion-plus' : 'ion-minus'"></i>
+          <!--ng-class="isPinShown(pin) ? 'ion-minus' : 'ion-plus'"-->
+          <ion-list ng-show="showPins" style="text-align:center">
+            <ion-item  style="border:none" class="" ng-bind-html="pin" ng-repeat="pin in pins">
+            <!--ng-show="isPinShown(pin)"-->
+              {{pin}}
+            </ion-item>
+          </ion-list>
         </ion-item>
-        <ion-item nav-clear menu-close href="#/app/video">
-          Videos
+        <!--<ion-item nav-clear menu-close href="#/app/preferences" class="category_menu">-->
+        <ion-item nav-clear class="category_menu">
+          &nbsp;
+          Preferences
         </ion-item>
-        <ion-item nav-clear menu-close href="#/app/playlists">
-          Playlists
+        <ion-item nav-clear id="logout" ng-show="isLoggedIn">
+          <button class="button button-assertive button-outline" menu-close ng-click="logout()" id="logout_btn">
+            Log out
+          </button>
         </ion-item>
-        <ion-item nav-clear menu-close href="#/app/playlists">
-          Account {{search}}
-        </ion-item>
-        
       </ion-list>
     </ion-content>
   </ion-side-menu>

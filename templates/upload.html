@@ -1,0 +1,51 @@
+<link rel="stylesheet" type="text/css" href="/img/icons/fonts/line/style.css" />
+<link rel="stylesheet" type="text/css" href="/img/icons/fonts/solid/style.css" />
+<link rel="stylesheet" type="text/css" href="/css/upload.css" />
+<ion-view view-title="Show us!">
+  <ion-content>
+    <form name="upload" id="upload" ng-model="vidUploadForm">
+    <!--<button id="upload-button" ng-click="uploadFile()">Upload</button>-->
+      <div style="height: 300px">
+        <map disable-default-u-i="true" data-tap-disabled="true" class="disable-user-behavior" ng-cloak>
+          <home id="home_upload" class="ion-android-locate nav-tools" ng-click="home()">
+          </home>
+        </map>
+      </div>
+      <input ng-model="title" id="upload_title" name="title" placeholder="Your title" required/>
+      <br />
+      <textarea ng-model="description" id="upload_description" name="description" placeholder="what's happening?" maxlength="210">
+      </textarea>
+      <br />
+      <div id="pin_row" ng-model="pin_panel">
+        <ion-scroll direction="x" class="wide-as-needed">
+          <i class="icon-Geo2 pin awesome"><i class="icon-Humor symbol"></i></i>
+          <i class="icon-Geo2 pin music"><i class="icon-Music-Note2 symbol"></i></i>
+          <i class="icon-Geo2 pin love"><i class="icon-Heart symbol"></i></i>
+          <i class="icon-Geo2 pin art"><i class="icon-Pencil symbol"></i></i>
+          <i class="icon-Geo2 pin party"><i class="icon-Martini-Glass symbol"></i></i>
+          <i class="icon-Geo2 pin police"><i class="icon-Police symbol"></i></i>
+          <i class="icon-Geo2 pin whoa"><i class="icon-Surprise symbol"></i></i>
+          <i class="icon-Geo2 pin vehicle"><i class="icon-Car-2 symbol"></i></i>
+          <i class="icon-Geo2 pin sports"><i class="icon-Baseball symbol"></i></i>
+          <i class="icon-Geo2 pin medical"><i class="icon-Stethoscope symbol"></i></i>
+          <i class="icon-Geo2 pin dialog"><i class="icon-Speach-BubbleDialog symbol"></i></i>
+          <i class="icon-Geo2 pin animals"><i class="icon-Cheetah symbol"></i></i>
+          <i class="icon-Geo2 pin fire"><i class="icon-Fire-Flame symbol"></i></i>
+          <i class="icon-Geo2 pin green"><i class="icon-Environmental-3 symbol"></i></i>
+          <i class="icon-Geo2 pin hero"><i class="icon-Batman-Mask symbol"></i></i>
+        </ion-scroll>
+      </div>
+      <br />
+      <input placeholder="When?" type="text" onfocus="(this.type='datetime-local');" id="upload_when" ng-model="when" step="600" />
+      <input type="hidden" id="upload_url" required/>
+      <input type="file" id="filePicker" />
+      <div class="btn-wrap">
+        <input type="submit" id="submitVid" class="button col-center" value="Post",/>
+        <span id="button-bg">Success!</span>
+        <input type="button" id="cancelVid" class="button col-center" ng-click="cancel()" value="Cancel"/>
+        <span id="button-bg">Cancel</span>
+      </div>
+    </form>
+  </ion-content>  
+</ion-view>
+

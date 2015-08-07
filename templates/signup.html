@@ -1,0 +1,29 @@
+<div class="modal" on-swipe-down="closeSignup()">
+  <ion-header-bar class="bar-balanced">
+    <button class="back-button button button-clear" ng-click="$ionicGoBack($event)"></button>
+    <h1 class="title">Sign up</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeSignup()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <form id="signup" name="signup" on-swipe-down="closeSignup()" role="form">
+      <div class="list">
+        <label class="item item-input">
+          <input type="text" ng-model="signupData.username" placeholder="username" required 
+          ng-minlength="1" />
+        </label>
+        <label class="item item-input">
+          <input type="password" ng-model="signupData.password" placeholder="password" required ng-minlength="4" />
+        </label>
+        <label class="item item-input">
+          <input type="password" ng-model="signupData.re_password" placeholder="re-type password" required ng-minlength="4" />
+        </label>
+        <label class="item">
+          <button class="button button-block button-balanced" ng-click="doSignup()" ng-disabled="signup.$invalid" type="submit">Sign up</button>
+        </label>
+      </div>
+    </form>
+  </ion-content>
+</div>
+

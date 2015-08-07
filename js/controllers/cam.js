@@ -1,4 +1,4 @@
-angular.module('AppCtrl', ['ionic', 'ngCordova', 'buzzmap.services'])
+angular.module('AppCtrl', ['ionic', 'ngCordova'])// 'buzzmap.services',
 app.controller('CamCtrl', ['$scope', '$cordovaCapture', '$ionicPlatform', '$state', '$ionicPopup', '$cordovaCamera', 'Photo', '$q', '$cordovaFileTransfer', '$ionicLoading', function($scope, $cordovaCapture, $ionicPlatform, $state, $ionicPopup, $cordovaCamera, Photo, $q, $cordovaFileTransfer, $ionicLoading) {
 	ionic.Platform.ready(function() {
 		// capture callback
@@ -35,8 +35,6 @@ app.controller('CamCtrl', ['$scope', '$cordovaCapture', '$ionicPlatform', '$stat
 			//-take video or image and upload to AWS S3 bucket - https://bm-vids.s3-website-us-west-1.amazonaws.com/
 			//Please fix app so files are uploaded to AWS S3 either unsecurely (directly from client without server)
 			//or securely (signed by script on server)
-			//Access Key ID: AKIAIHAKM42EXNJMBOHQ
-			//Secret Access Key: 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
 			$scope.takePicture = function() {
 				console.log('takePicture');
 		      	Photo.takePicture().then(function(imageData) {
@@ -73,8 +71,8 @@ app.controller('CamCtrl', ['$scope', '$cordovaCapture', '$ionicPlatform', '$stat
 
 		        var s3URI = encodeURI("https://bm-vids.s3-website-us-west-1.amazonaws.com/"), //destinationBucket.s3.amazonaws.com
 		            policyBase64 = "ew0KICAgICAgICAgICAgImV4cGlyYXRpb24iOiAiMjAyMC0xMi0zMVQxMjowMDowMC4wMDBaIiwNCiAgICAgICAgICAgICJjb25kaXRpb25zIjogWw0KICAgICAgICAgICAgICAgIHsiYnVja2V0IjogImJtLXZpZHMifSwNCiAgICAgICAgICAgICAgICBbInN0YXJ0cy13aXRoIiwgIiRrZXkiLCAiIl0sDQogICAgICAgICAgICAgICAgeyJhY2wiOiAncHVibGljLXJlYWQnfSwNCiAgICAgICAgICAgICAgICBbInN0YXJ0cy13aXRoIiwgIiRDb250ZW50LVR5cGUiLCAiIl0sDQogICAgICAgICAgICAgICAgWyJjb250ZW50LWxlbmd0aC1yYW5nZSIsIDAsIDUyNDI4ODAwMDAwMF0NCiAgICAgICAgICAgIF0NCiAgICAgICAgfQ==";        
-		            signature = "********",
-		            awsKey = 'PLEASE USE ACCESS KEY THAT I SENT YOU IN MESSAGE',
+		            signature = "f07c45acbb7d6e1c9eb23a162eaceb98fdffde55b9cb1bc9779a43d273d84c6f",
+		            awsKey = 'AKIAJFG7B7NV4RSY23DA',
 		            acl = "public-read";
 
 		        function upload(imageURI, fileName) {

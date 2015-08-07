@@ -1,0 +1,75 @@
+<style>
+.container {
+  width:100%;
+  display:block; 
+  position:absolute; 
+  height:100vh;
+  margin: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right:0;
+  bottom:0;
+  margin:auto;
+  max-width:100%;
+  max-height:100%;
+  overflow:auto;    
+}
+#uploadVid {
+  width: 100%;
+  border: white solid 1px;
+}
+#uploadVid td, tr {
+    border: solid 3px #999;
+    margin: 0;
+    padding: .5em .3em;
+}
+#uploadVid input, textarea {
+  width: 100%;
+  height: 100%;
+  border: none;
+  margin: 0;
+}
+
+
+</style>
+<ion-view>
+  <ion-content>
+    <table id="uploadVid">
+    <form ng-controller="UploadCtrl" name="upload">
+    <div id="uploadingVid">{{vidTitle}}</div> 
+      <tr>
+        <td colspan="3">
+          <input ng-model="vidTitle" placeholder="Create a title"></input>
+        </td>
+      </tr> 
+      <tr>
+        <td colspan="3">
+          <textarea ng-model="vidDesc" placeholder="Tell us what happened"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3">
+          <input ng-model="vidTags" placeholder="Enter up to 6 tags to help people find this video"/>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1">
+          <ion-toggle id="mike" ng-model="anonMode" toggle-class="toggle-calm" label="Anon" ng-init="true">anonMode</ion-toggle>
+        </td>
+        <td colspan="1">
+          <ion-toggle ng-model="anonMode" toggle-class="toggle-calm" label="Anon" ng-init="true">anonMode</ion-toggle>
+        </td>
+        <td colspan="1">
+          <input type="file" id="filePicker" />
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1">
+          <input type="submit" value="Submit" />
+        </td>
+      </tr>
+      </form>
+    </table>
+  </ion-content>
+</ion-view>
