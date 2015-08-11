@@ -18,8 +18,8 @@ app.controller('CamCtrl', ['$scope', '$cordovaCapture', '$ionicPlatform', '$stat
 					type: 'button-stable ion-ios7-film',
 					onTap: function(e){
 						//$scope.chooseVid();
-						$scope.selectVideo();
-						
+						//$scope.selectVideo();
+						$scope.takePicture();
 					}
 				},
 				{
@@ -40,8 +40,14 @@ app.controller('CamCtrl', ['$scope', '$cordovaCapture', '$ionicPlatform', '$stat
 		      	Photo.takePicture().then(function(imageData) {
 			        $scope.imageViewData = imageData;
 			        $scope.imageUploadData = imageData;
-			        $scope.uploadPicture(imageData);
+			        $scope.uploadPicture($scope.imageUploadData);
 			    });
+		    };
+		    $scope.uploadPicture = function() {
+		    	console.log('uploadPicture controller');
+		      	Photo.uploadPicture1($scope.imageUploadData).then(function(response) {
+		        	$scope.afterSubmit();
+		      	});
 		    };
 		    $scope.snap = function() {
 		      var q = $q.defer();
@@ -245,12 +251,7 @@ app.controller('CamCtrl', ['$scope', '$cordovaCapture', '$ionicPlatform', '$stat
 					$scope.uploadVid(imageURI);
 				});
 		    };
-		    $scope.uploadPicture = function() {
-		    	console.log('uploadPicture controller');
-		      	Photo.uploadPicture($scope.imageUploadData).then(function(response) {
-		        	$scope.afterSubmit();
-		      	});
-		    };
+		    
 		    $scope.afterSubmit = function() {
 		      console.log('Submitted');
 		    };

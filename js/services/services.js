@@ -108,13 +108,13 @@ app.factory('Photo', function($q, $cordovaCamera, $cordovaCapture, $state, $cord
       console.log('uploadPicture service');
       var s3Uploader = (function () {
 
-        var s3URI = encodeURI("https://bm-vids.s3-website-us-west-1.amazonaws.com/"), //destinationBucket.s3.amazonaws.com
+        var s3URI = encodeURI("https://bm-vids.s3.amazonaws.com/"), //destinationBucket.s3.amazonaws.com
             policyBase64 = "ew0KICAgICAgICAgICAgImV4cGlyYXRpb24iOiAiMjAyMC0xMi0zMVQxMjowMDowMC4wMDBaIiwNCiAgICAgICAgICAgICJjb25kaXRpb25zIjogWw0KICAgICAgICAgICAgICAgIHsiYnVja2V0IjogImJtLXZpZHMifSwNCiAgICAgICAgICAgICAgICBbInN0YXJ0cy13aXRoIiwgIiRrZXkiLCAiIl0sDQogICAgICAgICAgICAgICAgeyJhY2wiOiAncHVibGljLXJlYWQnfSwNCiAgICAgICAgICAgICAgICBbInN0YXJ0cy13aXRoIiwgIiRDb250ZW50LVR5cGUiLCAiIl0sDQogICAgICAgICAgICAgICAgWyJjb250ZW50LWxlbmd0aC1yYW5nZSIsIDAsIDUyNDI4ODAwMDAwMF0NCiAgICAgICAgICAgIF0NCiAgICAgICAgfQ==";        
             signature = "f07c45acbb7d6e1c9eb23a162eaceb98fdffde55b9cb1bc9779a43d273d84c6f",
-            awsKey = '***********',
+            awsKey = 'AKIAJK4WHLT524HC6YPA',
             acl = "public-read";
 
-        function upload(imageURI, fileName) {
+        function upload(imageData) {
 
           var deferred = $.Deferred(),
               ft = new FileTransfer(),
@@ -151,6 +151,30 @@ app.factory('Photo', function($q, $cordovaCamera, $cordovaCapture, $state, $cord
 
       }());
       
+    },
+    //upload
+    uploadPicture1: function(imageData) {
+      console.log('uploadPicture service');
+      AWS.config = new AWS.Config();
+        //AWS.config.accessKeyId = "AKIAJFG7B7NV4RSY23DA";
+        //AWS.config.secretAccessKey = "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";
+        AWS.config.accessKeyId = "AKIAJK4WHLT524HC6YPA";
+        AWS.config.secretAccessKey = "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";
+        var bucket = new AWS.S3({params: {Bucket: 'bm-vids'}});
+        var params = {
+          Key: "file", 
+          ContentType: "image/jpeg", 
+          Body: "data:image/jpeg;base64," + imageData
+        }
+        bucket.upload(params, function (err, data) {
+          console.log(params);
+          console.log("err: " + err);
+          console.dir(data);
+          console.log(data.Location);
+          //var parts = pathname.split(/\//);
+          //document.getElementById('upload_url').value = data.Location;
+          
+        });
     }
     //upload
   };
