@@ -32,13 +32,13 @@
         <!--<ion-toggle ng-model="map_event_toggle" toggle-class="toggle-map" style="color: #e93236">
           <span>Map</span>
           <span style="float: right; margin-right: -85px;">Events</span> -->
-        <ion-item nav-clear menu-close href="#/app/map" class="category_menu">
+        <ion-item nav-clear menu-close onclick="location.href = location.origin;" class="category_menu">
           &nbsp;
-          Home  
+          Map  
         </ion-item>
         <!-- Next 3 ion-items are exclusive, i.e. only one item may be displayed simultaneously -->
-        <ion-item class="item-royal" nav-clear id="authDisplay" ng-show="isLoggedIn" menu-close href="#/app/account" class="category_menu">
-          {{authDisplay}}
+        <ion-item class="item-calm" nav-clear id="authDisplay" ng-show="isLoggedIn" menu-close href="#/app/account" class="category_menu">
+          {{authDisplay}} <!--username-->
         </ion-item>
         <ion-item nav-clear id="enter" ng-hide="isLoggedIn">
           <button class="button button-calm button-outline" menu-close ng-click="login()" id="login_btn">

@@ -1,7 +1,9 @@
 'use strict';
 angular.module('buzzmap.controllers', ['ionic', 'firebase', 'ngCordova'])
 app.controller('AppCtrl', ['$scope', '$ionicModal', '$firebaseAuth', '$timeout', '$rootScope', '$cordovaToast', '$ionicPopup', 'fb_rt', 'fb_factory', '$ionicLoading', function($scope, $ionicModal, $firebaseAuth, $timeout, $rootScope, $cordovaToast, $ionicPopup, fb_rt, fb_factory, $ionicLoading) {
-
+  $ionicLoading.show({
+        template: 'Finding events...'
+  });
   var ref = new Firebase(fb_rt + 'users');
   var auth = $firebaseAuth(ref);
   // Register the callback to be fired every time auth state changes
@@ -9,6 +11,11 @@ app.controller('AppCtrl', ['$scope', '$ionicModal', '$firebaseAuth', '$timeout',
 
   $scope.signupData = {};
   
+  //screen.lockOrientation('portrait');
+  console.log(screen.orientation);
+  window.addEventListener("orientationchange", function(){
+    console.log('Orientation changed to ' + screen.orientation);
+  });
   // Create the signup modal that we will use later
   $ionicModal.fromTemplateUrl('templates/signup.html', {
     id: "signup",
@@ -87,16 +94,12 @@ app.controller('AppCtrl', ['$scope', '$ionicModal', '$firebaseAuth', '$timeout',
 
       }).catch(function(error) {
         console.log(error + error.code);
-      });            
-      
+      });                 
     } else {
-      console.log("Please re-type your password");
-          //$cordovaToast.show('Please re-type your password');
-          alert('Please re-type your password')
-          showAlert({
-            'title': 'You made a mistake',
-            'detail': 'Please re-type your password'
-          });
+      showAlert({
+        'title': 'You made a mistake',
+        'detail': 'Please re-type your password'
+      });
     }
   }
   // Form data for the login modal

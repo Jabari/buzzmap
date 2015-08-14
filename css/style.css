@@ -475,9 +475,16 @@ ion-side-menu button.button {
 	content: "\f1d9";
 }
 ion-side-menu ion-item.item {
-	color: #00899B;
+	color: #11a0f3;
+	text-align: center;
+	//margin-left: -25%;
 }
-
+.item-complex.item-calm > .item-content {
+    background-color: #11c1f3;
+    //background-color: #11a0f3;
+    margin: 0 auto;
+    padding: 1em;
+}
 .ion-ios-search-strong .search {
 	width: 12em;
 }
