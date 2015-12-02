@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="User Authentication">
+<meta name="author" content="">
+<title> BuzzMap - Home Page </title>
+<style type="text/css">body{padding:50px;font:14px "Lucida Grande",Helvetica,Arial,sans-serif;}a{color:#00B7FF;}form{max-width:300px;margin:30px auto;}div#progress{position:fixed;top:0;left:0;right:0;bottom:0;color:white;background-color:rgba(0,0,0,0.54);display:none;}div#progress.in{display:block;}div#progress.in h1{text-align:center;margin:260px auto;}</style>
+
+</head>
+<body>
+  <div ng-controller="UploadCtrl">
+    <input type="file" id="file_input" accept="video/*;capture=camcorder"/>
+    <p id="status">Please select a file</p>
+    <button onclick="pic">Pic</button>
+    <button ng-click="pic">Pic</button>
+    <div id="progress">
+    <h1></h1>
+    </div>
+    <div id="myImage">
+    </div>
+  </div>
+</body>
+</html>

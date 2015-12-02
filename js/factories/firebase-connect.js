@@ -24,13 +24,13 @@ angular.module('AppCtrl', [''])
             var firebase = new Firebase(firebaseUrl + '/users');
             return $firebase(firebase);
         }])
-        app.factory('fb_Factory', function($firebase, fb_rt) {
+        app.factory('fb_Factory', function($firebase, fbUrl) {
           return {
             getData: function(key) {
-              return $firebase(new Firebase(fb_rt + '/' + key));
+              return $firebase(new Firebase(fbUrl + '/' + key));
             },
             getData: function() {
-              return $firebase(new Firebase(fb_rt));
+              return $firebase(new Firebase(fbUrl));
             }
           };
         });

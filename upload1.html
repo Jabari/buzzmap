@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<!-- saved from url=(0021)http://52.27.180.252/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="User Authentication">
+  <meta name="author" content="">
+
+  <title> BuzzMap - Home Page </title>
+  
+  <link rel="stylesheet" href="http://52.27.180.252/stylesheets/style.css">
+  <script src="./upload_files/jquery-2.1.4.min.js"></script>
+  <script src="../../lib/ionic/js/ionic.bundle.js"></script>  
+  </head>
+  <body cz-shortcut-listen="true">
+    <script src="./upload_files/aws-sdk-2.1.24.min.js"></script>
+    <script type="text/javascript">
+        AWS.config.update({
+            accessKeyId : 'AKIAIY3XW5AWFTA7FDPA',
+            secretAccessKey : '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'
+        });
+        AWS.config.region = 'us-west-2';
+    </script>  
+<form id="fileUploadForm" method="post" enctype="multipart/form-data">
+  <input type="file" name="file" id="file" value="dataFile" required="">
+  <input type="submit" value="Submit"> 
+</form>
+<h1 id="progress" style="text-align: center;"></h1>
+<script type="text/javascript">
+  angular.element(document).ready(function() {
+    angular.element(document.querySelector("#fileUploadForm")).bind('submit', function() {
+      document.getElementById('progress').innerHTML = "";
+      //angular.element(document.querySelector("#progress")).innerHTML = "";
+      var bucket = new AWS.S3({params: {Bucket: 'bm-vids-test', ACL: 'public-read'}});
+      var fileChooser = document.getElementById('file');
+      var file = fileChooser.files[0];
+      if (file) {
+        console.log(file);
+        var date = Date.now();
+        var filename =+ date + file.name;
+        console.log(filename);
+        var params = {Key: file.name, ContentType: file.type, Body: file};
+        bucket.upload(params).on('httpUploadProgress', function(evt) {
+          angular.element(document.querySelector("#progress")).innerHTML = "Uploaded :: " + parseInt((evt.loaded * 100) / evt.total)+'%';
+          console.log("Uploaded :: " + parseInt((evt.loaded * 100) / evt.total)+'%');
+        }).send(function(err, data) {
+          angular.element(document.querySelector("#progress")).innerHTML = "Upload Completed!!! <br><a target='_blank' href='"+data.Location+"'>File Path</a>";
+          if (data) {
+            console.log(data);
+          } else {
+            console.log(err);
+          }
+        });
+      }
+      return false;
+    });
+  });
+</script>

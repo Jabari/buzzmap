@@ -39,7 +39,7 @@ app.factory('PinFactory', function() {
 				'whoa': '<i class="icon-Geo2 pin whoa"><i class="icon-Surprise symbol"></i></i>',
 				'police': '<i class="icon-Geo2 pin police"><i class="icon-Police symbol"></i></i>',
 				'hero': '<i class="icon-Geo2 pin hero"><i class="icon-Batman-Mask symbol"></i></i>'
-			}
+			};
 			var pin = pins[category];
 			return pin;
 		}

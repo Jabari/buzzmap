@@ -15,6 +15,11 @@ html, body, map {
     text-rendering: optimizeLegibility;
     touch-events: none !important;
     -webkit-user-select: none !important;
+    //font-family: ahamonomonospaced;
+    //font-family: "Montserrat Bold", "Helvetica Neue", Helvetica, sans-serif;
+    //Montserrat Alternates FOR LOGO & user comments
+    //Montserrat Subrayada (ALL CAPS) FOR EVENT TITLES & App text
+    //Montserrat for App text for App errors (ephemeral text)
 }
 a:active, i:active, button:active {
 	color: #a0d3d3;
@@ -37,47 +42,63 @@ map {
 	left:0;
 	right:0;
 }
+#pin_row {
+
+}
 /** map markers **/
-.labels {
-     background-color: transparent;
-     font-size: 10px;
-     font-weight: bold;
-     text-align: center;
-     width: 40px; 
-     padding-top: 1px;    
-     white-space: nowrap;
-     z-index: 0;
-   }
 .pin {
   font-size: 40px;
   z-index: 1;
   font-weight: bold;
-  -webkit-filter: saturate(1.2);
+}
+.labels {
+	background-color: transparent;
+	font-size: 10px;
+	font-weight: bold;
+	text-align: center;
+	width: 40px; 
+	padding-top: 1px;    
+	white-space: nowrap;
+	z-index: 0;
 }
 .symbol {
-  font-size: 22px;
-  font-weight: bold;
-  color: white;
-  position: relative;
-  right: 31px;
-  bottom: 8px;//8 or 14
-  z-index: 2;
+	font-size: 22px;
+	font-weight: bold;
+	color: white;
+	position: relative;
+	right: 31px;
+	bottom: 8px;//8 or 14
+	z-index: 2;
 }
 .icon-Geo2 .symbol {
-  font-size: 22px;
-  color: white;
-  position: relative;
-  right: 31px;
-  bottom: 14px;//8 or 14
-  z-index: 2;
+	font-size: 22px;
+	color: white;
+	position: relative;
+	right: 31px;
+	bottom: 14px;//8 or 14
+	z-index: 2;
+}
+.icon-Geo2:before {
+	text-shadow: 1px 2px 6px #666, 0 1px 0 #111, 1px 2px 6px #E0E0E0;//#999
+}
+.icon-Geo2:after {
+	text-shadow: 1px 2px 6px #111, 0 1px 0 #111, 1px 2px 6px #111;//#999
+	transform: rotate(60deg);
+	-webkit-transform: rotate(60deg);
+	height: 40px;
+	width: 40px;
+	background: #111;
+}
+ion-item .icon-Geo2:before, ion-item .icon-Geo2:after {
+	text-shadow: none;
 }
 .icon-Geo2.pin:active {
-  -webkit-filter: saturate(1.2) contrast(1.2);
+	-webkit-filter: saturate(1.4) contrast(1.4);
 }
 .icon-Humor.symbol {
-  font-size: 22px;
-  right: 31px;
-  bottom: 14px;
+	font-size: 22px;
+	right: 31px;
+	bottom: 14px;
 }
 .icon-Geo2.pin.awesome {
   //color: #10E8E8;
@@ -346,13 +367,24 @@ map {
 	box-shadow: 2px 0 3px -1px #222;
 	background: transparent;
 }
-/***** Log in & Sign Up****/
+/***** Log in & Sign Up & Welcome Screens ****/
+.item-floating-label .input-label.has-input {
+    transition: opacity 0.25s ease-in, top 0.15s ease;
+    color: #999;
+    text-transform: uppercase;
+}
+.welcome .title {
+	color: #fff;
+}
 form#login {
 	text-transform: uppercase;
 }
 .bar.bar-positive {
 	-webkit-box-shadow: #ccc 0px 2px 1px;
 	box-shadow: #ccc 0px 2px 1px;
+}
+.bar-header {
+	position: fixed;
 }
 button.button-positive {
 	-webkit-box-shadow: #bbb 0px 2px 2px;
@@ -369,8 +401,12 @@ button.button-positive {
 	font-weight: bold;
 }
 #authDisplay{
-	text-align: center;
-	color: #0171A1;
+	color: #fff;
+	font-size: 26px;
+	width: 275px;
+}
+.reset {
+	font-size: 22px;
 }
 #enter {
 //	display: none;
@@ -381,10 +417,27 @@ button.button-positive {
 ion-side-menu button.button {
 	width: 42%;
 }
+#pin-menu-list > div.list {
+    margin-top: 3px;
+}
+#pin-menu-list > div.list ion-item.menu-pin {
+	border: none;
+}
+#pin-menu-list > div.list ion-item.menu-pin.disabled {
+	background: #ffffff;
+    width: 277px;
+    -webkit-filter: saturate(0.6) contrast(0.75);
+    opacity: 0.6;
+    margin-left: -16px;
+    border-bottom: #ddd 1px solid;
+}
+#pin-menu-list > div.list i.pin {
+	margin-left: 20px;
+}
 #login .input-label {
 	color: #999;
 }
-#login input[type="text"], #signup input[type="text"], input[type="password"] {
+#login input[type="text"], #signup input[type="text"], input[type="password"], input[type="email"] {
   font-family: "Montserrat Bold", "Helvetica Neue", Helvetica, sans-serif;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -392,11 +445,55 @@ ion-side-menu button.button {
   color: #387ef5;
   font-weight: bold;
 }
+.slider {
+  position: absolute !important;
+  top: 0 ;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.ion-record:before {
+    color: #fff;
+    //-webkit-filter: brightness(1.3) contrast(1.3);
+	//filter: brightness(1.3) contrast(1.3);
+}
+.slider { 
+	height: 100%; 
+	text-align: center;
+}
+.slider-pager-page.active {
+    top: initial;
+    bottom: 60px !important;
+    stroke: red;
+}
+.icon .ion-record:before {
+	stroke: red !important;
+	fill: red;
+}
+.slider-pager {
+	//background: white;
+}
+.list-inset {
+	margin: 40% auto;
+	width: 76%;
+	border-radius: 4px;
+}
+#welcome {
+	background: #0171A1;
+	//background: url('https://smileradio.net/sites/default/files/manager/ez2012-saturday-dvs-082_0461.jpg') no-repeat  center center fixed;
+	background: url('/img/crowd_mini.jpg') no-repeat  center center fixed;
+	//background-position: center;
+	//background-repeat: no-repeat;
+	background-size: cover;
+	margin: auto;
+	z-index: 0;
+}
 /***** Map tools ****/
 .nav-tools {
 	color: #00899B;
 	font-size: 26px;
 	box-shadow: #666 1px 2px 3px;
+    text-shadow: 1px 4px 6px #fff, 0 1px 0 #111, 1px 4px 6px #fff;
 }
 
 .nav-tools:active {
@@ -425,8 +522,6 @@ ion-side-menu button.button {
 	border-radius: 4px;
 	background: #fff;
 	position: absolute;
-	top: 54px;
-	left: 15px;
 	padding: 6px 9px 5px;
 	font-size: 24px;
 	cursor: pointer;
@@ -435,26 +530,42 @@ ion-side-menu button.button {
 	height: 40px;
 	width: 40px;
 }
-
+home.ion-android-locate.nav-tools {
+	top: 55px;
+	left: 15px;
+}
 .button.button-icon.icon.ion-ios-paper-outline {
 	color: #00899B;
 }
 .ion-ios-paper-outline:before {
 	
 }
-#eye {
-	height: 55px;
+#file_input {
 	position: absolute;
-	bottom: 55px;
-	left: 14px;
+    bottom: 0;
+    left: 0;
+    height: 55px;
+    z-index: 100;
+    width: 56px;
+    opacity: 0;
+}
+#eye {
+	height: 53px;
+	width: 55px;
+	position: absolute;
+	bottom: 35px;
+	left: 15px;
 	text-align: center;
 	margin: 0 auto;
 	cursor: pointer;
 }
 .ion-aperture {
 	background: #fff;
-	padding: 11px 14px;
+	padding: 8px 11px;
 	border-radius: 4px;
+}
+.button-icon.icon:before, .ion-aperture:before {
+  font-size: 37px;
 }
 .ion-ios7-search-strong {
 	font-size: 28px;
@@ -513,17 +624,22 @@ ion-side-menu ion-item.item {
 }
 
 .toggle.toggle-map .track {
-border: solid 2px #00899B;
-background-color: #00899B;
+	border: solid 2px #00899B;
+	background-color: #00899B;
+	width: 108px;
+	height: 64px;
 }
 .category_menu {
-	//margin: -10px;
-	font-size: 1.5em;
-	//text-align: center;
+	font-size: 1.7em;
+	text-align: center;
 }
 
 .chosen {
 	color: #bbb;
+}
+.ion-ios7-search-strong:before {
+    margin-top: 3px;
+    font-weight: bold;
 }
 #search_map {
 	background: none;
@@ -532,7 +648,8 @@ background-color: #00899B;
 	color: #00899b;
 	float: left;
 	text-align: right;
-	margin-top: 5px;
+	position: relative;
+	bottom: 1px;
 	width: 0;
     transition: width .3s ease-in;
     -webkit-transition: width .3s ease-in;
@@ -573,7 +690,7 @@ background-color: #00899B;
 	background: #fff;
 	border: #ccc 2px solid;
 	border-radius: 3px;
-	}
+}
 .submitText {
 	position: relative;
 	//top: 3px;
@@ -604,8 +721,6 @@ ion-list#feed ion-item.item {
 ion-list#feed .item .item-content.activated {
 	background:#E0EFEF;
 }
-
-
 /* MIXINS */
 @mixin slide-transition() {
   -webkit-transition: -webkit-transform 400ms ease;
@@ -1062,7 +1177,11 @@ div#views.ion-ios-eye:before {
 }
 .item-toggle {
 	border: none;
-	height: 40px;
+	//height: 64px;
+}
+.toggle .handle {
+	//width: 56px;
+	//height: 56px;
 }
 .popup-container.active .popup {
 	border-radius: 2px;
@@ -1079,4 +1198,143 @@ div#views.ion-ios-eye:before {
 	font-size: 250%;
 }
 
+/****** upload ********/
 
+
+#upload_map {
+  position: absolute;
+  height: inherit;
+  width: 100%;
+}
+.container {
+  width:100%;
+  display:block; 
+  position:absolute; 
+  height:100vh;
+  margin: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right:0;
+  bottom:0;
+  margin:auto;
+  max-width:100%;
+  max-height:100%;
+  overflow:auto;    
+}
+#upload {
+  width: 100%;
+  height: 100%;
+  border: white solid 1px;
+  position: fixed;
+  top: 44px;
+  bottom: 0;
+}
+#upload input[type="text], textarea {
+	width: 100%;
+	height: 100%;
+	border: none;
+	margin: 0;
+	color: #777;
+	border-bottom: solid 2px #bbb;
+	padding: 1em;
+	font-size: 14px;
+	font-family: "Montserrat Bold", "Lucida Grande", "Helvetica Neue", Helvetica, sans-serif;
+	font-weight: bold;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	background: transparent;
+	position: relative;
+	top: 44px;
+}
+#pinrow {
+	position: relative;
+	top: 36%;
+	padding: 10px 0;
+	margin-bottom: 5px;
+}
+#uploadPin {
+	width: 50px;
+	position: absolute;
+	top: 25%;
+	left: 50%;
+	right: 50%;
+	z-index: 50;
+}
+.upload.ion-android-locate {
+	bottom: -1px;
+ 	right: 0;
+}
+#upload_description {
+	border-radius: 3px;
+	height: 3em;
+
+}
+i {
+  //float: left;
+}
+
+.wide-as-needed {
+  overflow: scroll;
+  white-space: nowrap;
+  padding-top: .2em;
+}
+.scroll { 
+  min-width: 100%;
+}
+#upload_buttons {
+	min-height: 60px;
+  	height: 13%;
+	float: left;
+	position: fixed;
+	bottom: 0 !important;
+	width: 100%
+}
+input#cancelVid {
+	width: 25%;
+	margin-left: -1%;
+	height: 100%;
+	border: 0;
+}
+input#submitVid {
+  background: #1fc330;
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 2px;
+  font-size: 1.1em;
+  -webkit-transition: all 4s cubic-bezier(0.445, 0.050, 0.550, 0.950);
+  z-index: 1;
+  width: 75%;
+  height: 100%;
+}
+input#submitVid:active {
+  background: linear-gradient(#1fc330 17%, #f7b423 17%, #f7b423 34%, #f58122 34%, #f58122 50%, #de3a3c 50%, #de3a3c 66%, #943f96 66%, #943f96 82%, #009fd9 82%, #009fd9 86%);
+  -webkit-filter: saturate(0.4) contrast(0.4) brightness (0.4);
+  filter: saturate(0.4) contrast(0.4) brightness (0.4);
+}
+.btn-wrap {
+  position: relative;
+  width:100%;
+  height:100%;
+  overflow: hidden;
+}
+#button-bg {
+  display: inline-block;
+  position: absolute;
+  width:100%;
+  height:100%;
+  top: 0;
+  z-index: 0;
+  background: linear-gradient(#1fc330 17%, #f7b423 17%, #f7b423 34%, #f58122 34%, #f58122 50%, #de3a3c 50%, #de3a3c 66%, #943f96 66%, #943f96 82%, #009fd9 82%, #009fd9 86%);
+  -webkit-transition: all 4s cubic-bezier(0.230, 1.000, 0.320, 1.000); 
+  font-size: 1.2em;
+  font-family: "Montserrat Bold", "Helvetica Neue", Helvetica, sans-serif;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #fff;
+  text-align: center;
+  padding-top: 7%;
+  top: 100%;
+  z-index: 2;
+}

@@ -1,302 +1,172 @@
-(function (jQuery, Firebase, Path) {
-    "use strict";
-
-    // the main firebase reference
-    var ref = new Firebase('https://buzzmapv0.firebaseio.com/users');
-
-    // pair our routes to our form elements and controller
+.controller('UploadCtrl', function($scope, $cordovaGeolocation, map_style, $cordovaCamera, PinFactory, $ionicScrollDelegate, $state, $cordovaProgress, $cordovaKeyboard, $cordovaFileTransfer, $ionicHistory, $ionicLoading, fbUrl, SynchFactory) {
+  var map, lat, lng;
+  $scope.$on('mapInitialized', function(event, map) {
+    var mapStyle = map_style.style1();
+    map.setOptions({styles: mapStyle, zoom: 15, minZoom: 12, keyboardShortcuts: false}); 
     
-    var routeMap = {
-        '#/register': {
-            form: 'signup',
-            controller: 'register'
-        },
-            '#/profile': {
-            form: 'frmProfile',
-            controller: 'profile',
-            authRequired$: true // must be logged in to get here
-        },
-    };
+    if(navigator.geolocation) {
+      var posOptions = {
+        timeout: 8000, 
+        enableHighAccuracy: true, 
+        maximumAge : 0
+      };
 
-    // create the object to store our controllers
-    var controllers = {};
+      $cordovaGeolocation.getCurrentPosition(posOptions).then(function(position) {
+        
+        $scope.pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        map.setCenter($scope.pos);
 
-    // store the active form shown on the page
-    var activeForm = null;
-
-    function routeTo(route) {
-        window.location.href = '#/' + route;
-    }
-
-    // Handle Email/Password login
-    // returns a promise
-    function authWithPassword(userObj) {
-        var deferred = $.Deferred();
-        console.log(userObj);
-        ref.authWithPassword(userObj, function onAuth(err, user) {
-            if (err) {
-                deferred.reject(err);
-            }
-
-            if (user) {
-                deferred.resolve(user);
-            }
-
-        });
-
-        return deferred.promise();
-    }
-
-    // create a user but not login
-    // returns a promsie
-    function createUser(userObj) {
-        var deferred = $.Deferred();
-        ref.createUser(userObj, function (err) {
-
-            if (!err) {
-                deferred.resolve();
-            } else {
-                deferred.reject(err);
-            }
-        });
-
-        return deferred.promise();
-    }
-
-    // Create a user and then login in
-    // returns a promise
-    function createUserAndLogin(userObj) {
-        return createUser(userObj)
-            .then(function () {
-            return authWithPassword(userObj);
-        });
-    }
-
-    // authenticate anonymously
-    // returns a promise
-    function authAnonymously() {
-        var deferred = $.Deferred();
-        ref.authAnonymously(function (err, authData) {
-
-            if (authData) {
-                deferred.resolve(authData);
-            }
-
-            if (err) {
-                deferred.reject(err);
-            }
-
-        });
-
-        return deferred.promise();
-    }
-
-    // route to the specified route if sucessful
-    // if there is an error, show the alert
-    function handleAuthResponse(promise, route) {
-        $.when(promise)
-            .then(function (authData) {
-
-            // route
-            routeTo(route);
-
-        }, function (err) {
-            console.log(err);
-            // pop up error
-            showAlert({
-                title: err.code,
-                detail: err.message,
-                className: 'alert-danger'
-            });
-
-        });
-    }
-
-    // options for showing the alert box
-    function showAlert(opts) {
-        var title = opts.title;
-        var detail = opts.detail;
-        var className = 'alert ' + opts.className;
-
-        alertBox.removeClass().addClass(className);
-        alertBox.children('#alert-title').text(title);
-        alertBox.children('#alert-detail').text(detail);
-    }
-
-    /// Controllers
-    ////////////////////////////////////////
-
-    controllers.login = function (form) {
-
-        // Form submission for logging in 
-        form.on('submit', function (e) {
-            var userAndPass = $(this).serializeObject();
-            userAndPass.email += "@buzzmap.co";
-            console.log(userAndPass);
-            var loginPromise = authWithPassword(userAndPass);
-            e.preventDefault();
-
-            handleAuthResponse(loginPromise, 'profile');
-
-        });
-
-        form.children('#btAnon').on('click', function (e) {
-            e.preventDefault();
-            handleAuthResponse(authAnonymously(), 'profilex');
-        });
-
-    };
-
-    // logout immediately when the controller is invoked
-    controllers.logout = function (form) {
-        ref.unauth();
-    };
-
-    controllers.register = function (form) {
-
-        // Form submission for registering
-        form.on('submit', function (e) {
-            var userAndPass = $(this).serializeObject();
-            //we append generic email to please firebase login gods
-            userAndPass.email += "@buzzmap.co";
-            console.log(userAndPass);
-            var loginPromise = createUserAndLogin(userAndPass);
-            e.preventDefault();
-
-            handleAuthResponse(loginPromise, 'profile');
-
-        });
-
-    };
-
-    controllers.profile = function (form) {
-        // Check the current user
-        var user = ref.getAuth();
-        var userRef;
-
-        // If no current user send to register page
-        if (!user) {
-            routeTo('register');
-            return;
+        $scope.home = function() {
+          map.setCenter($scope.pos);
         }
-
-        // Load user info
-        userRef = ref.child('users').child(user.uid);
-        userRef.once('value', function (snap) {
-            var user = snap.val();
-            if (!user) {
-                return;
-            }
-
-            // set the fields
-            form.find('#txtName').val(user.name);
-            form.find('#ddlDino').val(user.favoriteDinosaur);
-        });
-
-        // Save user's info to Firebase
-        form.on('submit', function (e) {
-            e.preventDefault();
-            var userInfo = $(this).serializeObject();
-
-            userRef.set(userInfo, function onComplete() {
-
-                // show the message if write is successful
-                showAlert({
-                    title: 'Successfully saved!',
-                    detail: 'You are still logged in',
-                    className: 'alert-success'
-                });
-
-            });
-        });
-
-    };
-
-    /// Routing
-    ////////////////////////////////////////
-
-    // Handle transitions between routes
-    function transitionRoute(path) {
-        // grab the config object to get the form element and controller
-        var formRoute = routeMap[path];
-        var currentUser = ref.getAuth();
-
-        // if authentication is required and there is no
-        // current user then go to the register page and
-        // stop executing
-        if (formRoute.authRequired && !currentUser) {
-            routeTo('register');
-            return;
-        }
-
-        // wrap the upcoming form in jQuery
-        var upcomingForm = $('#' + formRoute.form);
-
-        // if there is no active form then make the current one active
-        if (!activeForm) {
-            activeForm = upcomingForm;
-        }
-
-        // hide old form and show new form
-        activeForm.hide();
-        upcomingForm.show().hide().fadeIn(750);
-
-        // remove any listeners on the soon to be switched form
-        activeForm.off();
-
-        // set the new form as the active form
-        activeForm = upcomingForm;
-
-        // invoke the controller
-        controllers[formRoute.controller](activeForm);
+        
+        $scope.$watch(function(){ 
+          marker1 = new MarkerWithLabel({
+            map: map,
+            icon: '',
+            labelContent: $scope.chosenPin,
+            labelAnchor: new google.maps.Point(20, 40),
+            labelClass: "labels", // the CSS class for the label
+            labelInBackground: false,
+            labelStyle: {opacity: 1.0}
+          });
+          marker1.bindTo('position', map, 'center');
+        });  
+        var center = map.getCenter();
+        lat = center.lat();
+        lng = center.lng();
+      }); 
     }
+    return map, lat, lng;
+  });
 
-    // Set up the transitioning of the route
-    function prepRoute() {
-        transitionRoute(this.path);
-    }
+          console.log(map, lat, lng);   
 
+  $scope.pins = PinFactory.allPins();
+  var pinKeys = Object.keys($scope.pins);
+  
+  var pins = Object.keys($scope.pins);
 
-    /// Routes
-    ///  #/         - Login
-    //   #/logout   - Logut
-    //   #/register - Register
-    //   #/profile  - Profile
+  var vidCat = "awesome";
 
-    Path.map("#/").to(prepRoute);
-    Path.map("#/logout").to(prepRoute);
-    Path.map("#/register").to(prepRoute);
-    Path.map("#/profile").to(prepRoute);
+  $scope.chosenPin = $scope.pins[vidCat];
+  
+  var index, key, marker1;
 
-    Path.root("#/register");
+  $scope.choosePin = function() {
 
-    /// Initialize
-    ////////////////////////////////////////
+    index = this['$index'];// get integer 
+    key = pinKeys[index];//get category's name from array
+    $scope.chosenPin = $scope.pins[key];//change pin
+    vidCat = key;//set video category
+    console.log(index, key, $scope.chosenPin);     
+  
+  }
+ 
+  $scope.cancel = function() {
+    $state.go('app.map');
 
-    $(function () {
-
-        // Start the router
-        Path.listen();
-
-        // whenever authentication happens send a popup
-        ref.onAuth(function globalOnAuth(authData) {
-
-            if (authData) {
-                showAlert({
-                    title: 'Logged in!',
-                    detail: 'Using ' + authData.provider,
-                    className: 'alert-success'
-                });
-            } else {
-                showAlert({
-                    title: 'You are not logged in',
-                    detail: '',
-                    className: 'alert-info'
-                });
-            }
-
-        });
-
+    $ionicHistory.nextViewOptions({
+      disableBack: true
     });
 
-}(window.jQuery, window.Firebase, window.Path))
+    $ionicHistory.clearHistory();
+
+    $ionicLoading.show({
+      template: 'Post cancelled',
+      noBackdrop: true,
+      duration: 1500
+    });   
+    
+  }
+  //cordova.plugins.Keyboard.disableScroll(true);
+  //window.addEventListener('native.keyboardshow', keyboardShowHandler);
+
+  function keyboardShowHandler(e){
+    $ionicScrollDelegate.scrollTop();
+    console.log('Keyboard height is: ' + e.keyboardHeight);
+  }
+              
+  document.getElementById("file_input").onchange = function() {
+    console.log("file_input");
+    $state.go('upload');
+    var files = document.getElementById("file_input").files;
+    var file = files[0];
+    if (file) SynchFactory.uploadVideo(file);
+
+  };
+    
+  
+
+  var onComplete = function(error, vidUrl) {
+    if (error) {
+        console.log('Synchronization failed');
+        $ionicPopup.alert({'templete': 'Synchronization failed'});
+    } else {
+      upload++;
+      $ionicLoading.show({
+        template: 'Successful post!',
+        noBackdrop: true,
+        duration: 2000
+      });
+      console.log('Upload & Synchronization succeeded' + upload);
+      console.log(vidUrl);
+      //document.getElementById('button-bg').style.top = "0px";
+      $ionicHistory.nextViewOptions({
+        disableBack: true
+      });
+      $state.go('app.map');
+      $ionicHistory.clearHistory();
+    }
+  }
+  var ref = new Firebase(fbUrl + 'videos');
+  ref.on('value', function(snapshot, event) {
+      console.log(snapshot.val());
+      angular.element(document.querySelector('#upload')).bind('submit', function() {
+        console.log(snapshot.val());
+        var vidNumber = snapshot.val().length ++;
+        var lat = center.lat();
+        var lng = center.lng();
+        var vidTitle = $scope.upload_title;
+        var vidDescription = $scope.upload_description;
+        var vidTags = $scope.upload_description.match(/(^|\s)(#[a-z\d-]+)/ig);
+        var vidUser = $scope.authDisplay;
+        var vidUrl = data.Location;
+        var t_occ = $scope.when;
+        var t_posted = Date.now();
+        $scope.vid_description = document.getElementById('upload_description').value;
+        $scope.vid_description = $scope.upload_description;
+        $scope.vidTags = $scope.upload_description.match(/(^|\s)(#[a-z\d-]+)/ig);   
+        $scope.vidDesc = $scope.upload_description.replace(/(^|\s)(#[a-z\d-]+)/ig, "$1<span class='hashtag'>$2</span>");
+        $scope.when = document.getElementById('upload_when').value;
+
+        ref.child(vidNumber).set({
+          Lat: lat,
+          Lng: lng,
+          t_posted: t_posted,
+          t_occ: t_occ,
+          title: vidTitle,
+          vidid: vidNumber,
+          category: vidCat,
+          description: vidDesc,
+          tags: vidTags,
+          url: vidUrl,
+          comments: [],
+          twit : 0,
+          fb : 0,
+          gplus : 0,
+          redd: 0,
+          wapp: 0,
+          copy : 0,
+          sms : 0,
+          views : 0,
+          ups : 0,
+          downs: 0,
+          flags : 0,
+          mod : 0
+
+        }, onComplete);
+      });
+  });
+      
+});

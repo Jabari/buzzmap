@@ -1,8 +1,9 @@
 <ion-view title='<!--<img src="../img/bm-pin-v1-38x42.png" />-->'>
-  <!--
-  <ion-refresher on-refresh="doRefresh()" refreshing-text="loading...">
+<ion-scroll>  
+  <ion-refresher on-refresh="location.href = location.origin;" refreshing-text="loading...">
+
   </ion-refresher>
-  -->
+</ion-scroll>  
   <ion-nav-buttons side="left">
     <button menu-toggle="left" class="button button-icon icon ion-navicon-round"></button>
   </ion-nav-buttons>
@@ -11,20 +12,26 @@
   </ion-nav-buttons>
   <ion-content id="map" hide-nav-bar="true">
     <div class="ng-scope">
-      <map disable-default-u-i="true" class="disable-user-behavior" ng-cloak>      
+      <map disable-default-u-i="true" class="disable-user-behavior" data-tap-disabled="true" ng-cloak>      
+        
         <home class="ion-android-locate nav-tools" position="TOP_LEFT" index="1" ng-click="home()">
         </home>
 
         <search href="#search_field" class="ion-ios7-search-strong nav-tools" position="TOP_RIGHT" 
         index="2" id="search" ng-click="startSearch()">
           <input id="search_map" ng-model="searchMap" ng-class="{'widen': toggleSearch}" 
-          ng-click="$event.stopPropagation();"
-          ng-keyup="$event.keyCode == 13 && googleMap()" ng-autocomplete placeholder="Search by #tag or locations"/>
+          ng-click="$event.stopPropagation();" type="search"
+          ng-keyup="$event.keyCode == 13 && googleMap()" 
+          ng-autocomplete placeholder="Search by #tag or location"/>
         </search>
 
-        <cam class="button-icon icon ion-aperture nav-tools" index="3" id="eye" position="BOTTOM_LEFT" ng-click="postVid()" ng-controller="CamCtrl"> 
+        <cam class="button-icon icon ion-aperture nav-tools" index="3" id="eye" position="BOTTOM_LEFT" ng-click="postVid()" ng-controller="CamCtrl">
+        <!--ng-controller="UploadCtrl"-->
+        <!-- ng-click="postVid()" ng-controller="CamCtrl" -->
+          <!--<div ng-controller="UploadCtrl">
+            <input type="file" id="file_input" accept="video/*" capture>
+          </div>-->
         </cam>
-
         <clock class="button-icon icon ion-android-clock nav-tools" index="4" src="../img/timeline.png" id="clock" position="BOTTOM_RIGHT" ng-click="Timeline()" ng-hide="true"> 
         </clock>
 

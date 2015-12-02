@@ -1,0 +1,41 @@
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.24.min.js"></script>
+<script src="../../lib/ionic/js/ionic.bundle.js"></script>
+<script type="text/javascript">
+    AWS.config.update({
+        accessKeyId : 'AKIAIY3XW5AWFTA7FDPA',
+        secretAccessKey : '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'
+    });
+    AWS.config.region = 'us-west-2';
+</script>
+  
+<form id="fileUploadForm" method="post" enctype="multipart/form-data">
+  <input type="file" name="file" id="file" value="dataFile" required="">
+  <input type="submit" value="Submit"> 
+</form>
+<h1 id="progress" style="text-align: center;"></h1>
+<script type="text/javascript">
+  angular.element(document).ready(function() {
+    angular.element(document.querySelector("#fileUploadForm")).bind('submit', function() {
+      angular.element(document.querySelector("#progress")).html("");
+      var bucket = new AWS.S3({params: {Bucket: 'bm-vids-test', ACL: 'public-read'}});
+      var fileChooser = document.getElementById('file');
+      var file = fileChooser.files[0];
+      if (file) {
+        console.log(file);
+        var params = {Key: file.name, ContentType: file.type, Body: file};
+        bucket.upload(params).on('httpUploadProgress', function(evt) {
+          angular.element(document.querySelector("#progress")).text("Uploaded :: " + parseInt((evt.loaded * 100) / evt.total)+'%');
+          console.log("Uploaded :: " + parseInt((evt.loaded * 100) / evt.total)+'%');
+        }).send(function(err, data) {
+          angular.element(document.querySelector("#progress")).html("Upload Completed!!! <br><a target='_blank' href='"+data.Location+"'>File Path</a>")
+          if (data) {
+            console.log(data);
+          } else {
+            console.log(err);
+          }
+        });
+      }
+      return false;
+    });
+  });
+</script>

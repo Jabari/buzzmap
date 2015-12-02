@@ -8,60 +8,55 @@
     </ion-nav-bar>
     <ion-nav-view name="menuContent" animation="slide-left-right"></ion-nav-view>
   </ion-pane>
-  <ion-side-menu side="left" ng-controller="searchCtrl">
-    <header class="bar bar-header bar-light">
-      <!--<input type="search" id="search_tag" class="ion-ios7-search" placeholder="#" value="#" ng-model="search" />-->
+  <ion-side-menu side="left">
+    <header class="bar bar-header bar-calm center category_menu" ng-show="isLoggedIn" menu-close href="#/app/account" nav-clear>
+      <!-- Next 3 ion-items are exclusive, i.e. only one item may be displayed simultaneously -->
+        <span class="center" id="authDisplay">{{authDisplay}}</span> <!--username-->
+      <!--
+      <ion-item nav-clear id="enter" ng-hide="isLoggedIn">
+        <button class="button button-calm button-outline" menu-close ng-click="login()" id="login_btn">
+          Log in
+        </button>
+        <button class="button button-balanced" menu-close ng-click="signup()" id="signup_btn">
+          Sign up
+        </button>
+      </ion-item>
+      -->
     </header>
     <ion-content class="has-header">
       <ion-list>
       <style>
-      .list .item.item-accordion {
-  line-height: 38px;
-  padding-top: 0;
-  padding-bottom: 0;
-  transition: 0.09s all linear;
-}
-.list .item.item-accordion.ng-hide {
-  line-height: 0px;
-}
-.list .item.item-accordion.ng-hide-add,
-.list .item.item-accordion.ng-hide-remove {
-  display: block !important;
-}
-</style>
+        .list .item.item-accordion {
+          line-height: 38px;
+          padding-top: 0;
+          padding-bottom: 0;
+          transition: 0.09s all linear;
+        }
+        .list .item.item-accordion.ng-hide {
+          line-height: 0px;
+        }
+        .list .item.item-accordion.ng-hide-add,
+        .list .item.item-accordion.ng-hide-remove {
+          display: block !important;
+        }
+      </style>
         <!--<ion-toggle ng-model="map_event_toggle" toggle-class="toggle-map" style="color: #e93236">
           <span>Map</span>
           <span style="float: right; margin-right: -85px;">Events</span> -->
-        <ion-item nav-clear menu-close onclick="location.href = location.origin;" class="category_menu">
-          &nbsp;
-          Map  
-        </ion-item>
-        <!-- Next 3 ion-items are exclusive, i.e. only one item may be displayed simultaneously -->
-        <ion-item class="item-calm" nav-clear id="authDisplay" ng-show="isLoggedIn" menu-close href="#/app/account" class="category_menu">
-          {{authDisplay}} <!--username-->
-        </ion-item>
-        <ion-item nav-clear id="enter" ng-hide="isLoggedIn">
-          <button class="button button-calm button-outline" menu-close ng-click="login()" id="login_btn">
-            Log in
-          </button>
-          <button class="button button-balanced" menu-close ng-click="signup()" id="signup_btn">
-            Sign up
-          </button>
-        </ion-item>
-        <ion-item class="category_menu choosen" ng-controller="PinCtrl" ng-click="showPins = !showPins"> <!--ng-class="{active: isPinShown(pin)}"-->
+        <ion-item nav-clear class="category_menu" ng-click="reset()">
+          <i ng-class="resetIcon === false ? 'ion-refresh' : 'ion-refreshing'"></i>   
+        </ion-item>      
+        <ion-item class="category_menu choosen" ng-controller="PinCtrl" ng-click="showPins = !showPins"> 
           <i class="icon center" id="pm_pins" ng-class="showPins === false ? 'ion-plus' : 'ion-minus'"></i>
-          <!--ng-class="isPinShown(pin) ? 'ion-minus' : 'ion-plus'"-->
-          <ion-list ng-show="showPins" style="text-align:center">
-            <ion-item  style="border:none" class="" ng-bind-html="pin" ng-repeat="pin in pins">
-            <!--ng-show="isPinShown(pin)"-->
+          <ion-list id="pin-menu-list" ng-show="showPins" class="center">
+            <ion-item ng-click="disablePin($index, $event);" class="menu-pin" ng-bind-html="pin" 
+            ng-repeat="pin in pins" ng-class="disabledPins[$index]">
               {{pin}}
             </ion-item>
           </ion-list>
         </ion-item>
-        <!--<ion-item nav-clear menu-close href="#/app/preferences" class="category_menu">-->
-        <ion-item nav-clear class="category_menu">
-          &nbsp;
-          Preferences
+        <ion-item nav-clear menu-close class="category_menu">
+          <i class="ion-gear-a"></i>
         </ion-item>
         <ion-item nav-clear id="logout" ng-show="isLoggedIn">
           <button class="button button-assertive button-outline" menu-close ng-click="logout()" id="logout_btn">

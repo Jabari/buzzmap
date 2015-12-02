@@ -1,9 +1,12 @@
 'use strict';
-angular.module('AppCtrl', ['ngMap', 'Auth', 'ngCordova'])
-app.controller('MapGeolocationCtrl', ["$scope", "$cordovaGeolocation", "$timeout", "$ionicModal", "$ionicLoading", "$sce", "$cordovaToast", "timeAgo", "nowTime", "PinFactory", "map_style", "$ionicPopup", function($scope, $cordovaGeolocation, $timeout, $ionicModal, $ionicLoading, $sce, $cordovaToast, timeAgo, nowTime, PinFactory, map_style, $ionicPopup) {
-  //ionic.Platform.ready(function() {
+angular.module('AppCtrl', ['ngMap', 'ngCordova'])
+app.controller('MapGeolocationCtrl', ["$scope", "$cordovaGeolocation", "$timeout", "$ionicModal", "$ionicLoading", "$ionicHistory", "$sce", "$cordovaToast", "timeAgo", "nowTime", "PinFactory", "map_style", "$ionicPopup", "fbRef", function($scope, $cordovaGeolocation, $timeout, $ionicModal, $ionicLoading, $ionicHistory, $sce, $cordovaToast, timeAgo, nowTime, PinFactory, map_style, $ionicPopup, fbRef) {
+  if ((window.localStorage.getItem("username") === null && window.localStorage.getItem("password") === null) || (window.localStorage.getItem("username") === "undefined" && window.localStorage.getItem("password") === "undefined"))
+  {
+    return
+  } else {
+    $ionicHistory.clearHistory();
     $scope.$on('mapInitialized', function(event, map) {
-      // designed on snazzymaps.com
       var mapStyle = map_style.style1();
       map.setOptions({styles: mapStyle, zoom: 12, maxZoom: 16, minZoom: 5, keyboardShortcuts: false}); 
       
@@ -29,7 +32,7 @@ app.controller('MapGeolocationCtrl', ["$scope", "$cordovaGeolocation", "$timeout
             icon: userLoc,
             map: map
           });
-
+          //shen user taps on ^marker^
           google.maps.event.addListener(marker, 'click', function(marker) {
             $ionicLoading.show({
               template: 'This is your current location',
@@ -41,15 +44,23 @@ app.controller('MapGeolocationCtrl', ["$scope", "$cordovaGeolocation", "$timeout
               $ionicLoading.hide();
           });
           map.setCenter($scope.pos);
-
+          //pans map back to user location
           $scope.home = function() {
             map.setCenter($scope.pos);
           }
+          
           //remove top header from map screen
           var removeMapHeader = document.getElementById("map");
           removeMapHeader.classList.remove("has-header");   
         },
         function(err) {
+          $scope.home = function() {
+              $ionicLoading.show({
+                template: "You're location can't be found. Reload the map.",
+                duration: 1800
+              });
+          };
+          console.log($scope.pos);
           console.log('Error retrieving location: ' + err.code + " : " + err.message);
           //err.code = 0: unknown error, 1: permission denied, 2, position unavilable (error response from location provider), 3: timed out
           function twitter() {
@@ -242,27 +253,31 @@ app.controller('MapGeolocationCtrl', ["$scope", "$cordovaGeolocation", "$timeout
       var markers = [];
       var mcOptions = {averageCenter: true, gridSize: 20, maxZoom: 12, minimumClusterSize: 2};
       $scope.markerClusterer = new MarkerClusterer(map, [], mcOptions);
-      var ref = new Firebase('https://buzzmapv0.firebaseio.com/');
+      //var ref = fbRef;
+      var ref = new Firebase("https://buzzmapv0.firebaseio.com/videos");
       //ref.limitToLast(20)
-      ref.on('value', function(snapshot, event) {
+      //requests last 20 videos posted; queried by time posted, not time occured
+      ref.orderByChild("t_posted").limitToLast(20).once('value', function(snapshot, key) {
         console.log("firebase value: " + snapshot.val());
-        $scope.mapData = snapshot.val();
-        
-        console.log($scope.mapData.videos.length);
+        $scope.snapshot = snapshot.val();
+        $scope.key = snapshot.key();
+        $scope.eventData = $scope.snapshot;
+        console.log($scope.eventData);
+        console.log(key);
 
-        for (var i = 0; i < $scope.mapData.videos.length; i++) {
-          var lat = $scope.mapData.videos[i].Lat;
-          var lng = $scope.mapData.videos[i].Lng;
+        for (var i = 0; i < $scope.eventData.length; i++) {
+          var lat = $scope.eventData[i].Lat;
+          var lng = $scope.eventData[i].Lng;
           var latlng = new google.maps.LatLng(lat, lng);
           $scope.lat = lat;
           $scope.lng = lng;
           $scope.latlng = latlng;
           console.log("lat: " + lat + ", lng: " + lng);
-          $scope.pin = $sce.trustAsHtml(PinFactory.setPin($scope.mapData.videos[i].cat));
-          console.log($scope.mapData.videos[i].cat);
+          $scope.pin = $sce.trustAsHtml(PinFactory.setPin($scope.eventData[i].cat));
+          console.log($scope.eventData[i].cat);
           markers[i] = new MarkerWithLabel({ 
             position: latlng, 
-            //title: $scope.mapData.videos[i].title, 
+            //title: $scope.eventData[i].title, 
             clickable: true, 
             icon: ' ',
             labelContent: $scope.pin,
@@ -278,18 +293,93 @@ app.controller('MapGeolocationCtrl', ["$scope", "$cordovaGeolocation", "$timeout
           google.maps.event.addListener(markers[i], 'click', (function(markers, i) {
             return function() {
               $scope.$apply(function () {
-                $scope.title = $scope.mapData.videos[i].title;
-                $scope.url = $sce.trustAsResourceUrl($scope.mapData.videos[i].url);
-                $scope.username = $scope.mapData.videos[i].user;
-                $scope.views = $scope.mapData.videos[i].views;
-                $scope.desc = $sce.trustAsHtml($scope.mapData.videos[i].description);
-                $scope.comments = $scope.mapData.videos[i].comments;
+                $scope.title = $scope.eventData[i].title;
+                $scope.url = $sce.trustAsResourceUrl($scope.eventData[i].url);
+                $scope.username = $scope.eventData[i].user;
+                $scope.views = $scope.eventData[i].views;
+                $scope.desc = $sce.trustAsHtml($scope.eventData[i].description);
+                $scope.comments = $scope.eventData[i].comments;
                 console.log($scope.comments);
                 map.setCenter(markers[i].position);
                 map.setZoom(16);
                 map.panBy(0, -window.innerHeight/2.1);
                 $scope.views++;
-                $scope.ups = $scope.mapData.videos[i].ups;
+                $scope.ups = $scope.eventData[i].ups;
+                $scope.openModal(1);
+              });
+            }
+          })(markers, i));
+          //end search for places on map    
+        }
+        //$scope.markerClusterer = new MarkerClusterer(map, markers, mcOptions);
+        $scope.panToPin = function($scope, latlng) {
+          map.setCenter(latlng);
+          console.log(latlng);
+          map.setZoom(13);        
+        }
+
+        $scope.addComment = function() {
+          $scope.comments[ref.push().comments()] = {
+            user: $scope.username, content: $scope.comment
+          };
+        }
+        $scope.upvote = function() {
+          $scope.ups++;
+        }
+        $scope.downvote = function() {
+          $scope.ups--;
+        }
+      });
+
+      $scope.newData = [];
+      ref.on('child_changed', function(snapshot, key) {
+        console.log("firebase value: " + snapshot.val());
+        $scope.snapshot = snapshot.val();
+        $scope.key = snapshot.key();
+        $scope.newData.push($scope.snapshot);
+        console.log($scope.newData);
+        console.log(key);
+
+        for (var i = 0; i < $scope.newData.length; i++) {
+          var lat = $scope.newData[i].Lat;
+          var lng = $scope.newData[i].Lng;
+          var latlng = new google.maps.LatLng(lat, lng);
+          $scope.lat = lat;
+          $scope.lng = lng;
+          $scope.latlng = latlng;
+          console.log("lat: " + lat + ", lng: " + lng);
+          $scope.pin = $sce.trustAsHtml(PinFactory.setPin($scope.newData[i].cat));
+          console.log($scope.newData[i].cat);
+          markers[i] = new MarkerWithLabel({ 
+            position: latlng, 
+            //title: $scope.newData[i].title, 
+            clickable: true, 
+            icon: ' ',
+            labelContent: $scope.pin,
+            labelAnchor: new google.maps.Point(20, 40),
+            labelClass: "labels", // the CSS class for the label
+            labelInBackground: false,
+            labelStyle: {opacity: 1},
+            animation: google.maps.Animation.DROP
+          });
+          
+          $scope.markerClusterer.addMarker(markers[i]);  
+
+          google.maps.event.addListener(markers[i], 'click', (function(markers, i) {
+            return function() {
+              $scope.$apply(function () {
+                $scope.title = $scope.newData[i].title;
+                $scope.url = $sce.trustAsResourceUrl($scope.newData[i].url);
+                $scope.username = $scope.newData[i].user;
+                $scope.views = $scope.newData[i].views;
+                $scope.desc = $sce.trustAsHtml($scope.newData[i].description);
+                $scope.comments = $scope.newData[i].comments;
+                console.log($scope.comments);
+                map.setCenter(markers[i].position);
+                map.setZoom(16);
+                map.panBy(0, -window.innerHeight/2.1);
+                $scope.views++;
+                $scope.ups = $scope.newData[i].ups;
                 $scope.openModal(1);
               });
             }
@@ -316,7 +406,6 @@ app.controller('MapGeolocationCtrl', ["$scope", "$cordovaGeolocation", "$timeout
         }
       });    
       //end of firebase data & markers    
-      //$ionicLoading.hide();
 
     //}
      /**
@@ -328,6 +417,7 @@ app.controller('MapGeolocationCtrl', ["$scope", "$cordovaGeolocation", "$timeout
     **/
     //navigator.geolocation  
     
-  }); //$scope.$on('mapInitialized', 
+  }); //$scope.$on('mapInitialized',
+  }
   //}); //ionic.Platform.ready
 }]);

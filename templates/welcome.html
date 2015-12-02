@@ -1,0 +1,49 @@
+<ion-view id="welcome" ng-controller="WelcomeCtrl">
+  <!--<h1 class="welcome title">{{welcome}}</h1>-->
+    <ion-slide-box on-slide-changed="slideHasChanged($index)" show-pager="true" pager-click="navSlide(index)" does-continue="true">
+      <ion-slide-pager>
+        <i class="ion-arrow-left-c"></i>
+        <span>Already signed up? Swipe left to login</span>
+      </ion-slide-pager>
+      <ion-slide>
+          <form id="signup" name="signup" role="form">
+            <div class="list list-inset">
+              <label class="item item-input item-floating-label">
+                <span class="input-label">username</span>
+                <input type="text" ng-model="signupData.username" placeholder="username" required 
+                ng-minlength="1" />
+              </label>
+              <label class="item item-input item-floating-label">
+                <span class="input-label">password</span>
+                <input type="password" ng-model="signupData.password" placeholder="password" required ng-minlength="4" />
+              </label>
+              <label class="item item-input item-floating-label">
+                <span class="input-label">password, again</span>
+                <input type="password" ng-model="signupData.re_password" placeholder="re-type password" required ng-minlength="4" />
+              </label>
+              <label class="item">
+                <button class="button button-block button-positive" ng-click="doSignup()" ng-disabled="signup.$invalid" type="submit">SIGN UP</button>
+              </label>
+            </div>
+          </form>
+      </ion-slide>
+      <ion-slide>
+          <form id="login" name="login" role="form">
+            <div class="list list-inset">
+              <label class="item item-input item-floating-label">
+                <span class="input-label">username</span>
+                <input type="text" ng-model="loginData.username" placeholder="username" required ng-minlength="1">
+              </label>
+              <label class="item item-input item-floating-label">
+                <span class="input-label">password</span>
+                <input type="password" ng-model="loginData.password" placeholder="password" required ng-minlength="4">
+              </label>
+              <label class="item">
+                <button class="button button-block button-positive" ng-click="doLogin()" ng-disabled="login.$invalid" type="submit">LOG IN</button>
+              </label>
+            </div>
+          </form>
+      </ion-slide>
+    </ion-slide-box>
+</ion-view>
+
